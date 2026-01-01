@@ -10,6 +10,13 @@ import { allProducts, type Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { z } from "zod";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface Review {
   id: number;
@@ -130,18 +137,50 @@ const ProductDetails = () => {
     setForm({ name: "", rating: 5, comment: "" });
   };
 
+  const imageGallery = [product.image, product.image, product.image];
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
 
       <main className="flex-1 container mx-auto px-4 py-8 grid gap-8 lg:grid-cols-2">
-        {/* Left: Image */}
-        <section className="bg-muted rounded-3xl p-4 sm:p-6 flex items-center justify-center">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="rounded-2xl w-full max-w-md object-cover shadow-medium"
-          />
+        {/* Left: Image carousel */}
+        <section className="space-y-4">
+          <div className="bg-muted rounded-3xl p-3 sm:p-4 flex items-center justify-center">
+            <Carousel className="w-full max-w-md" opts={{ loop: true }}>
+              <CarouselContent>
+                {imageGallery.map((src, index) => (
+                  <CarouselItem key={index}>
+                    <div className="overflow-hidden rounded-2xl group cursor-zoom-in">
+                      <img
+                        src={src}
+                        alt={`${product.name} ছবি ${index + 1}`}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="bg-background/80" />
+              <CarouselNext className="bg-background/80" />
+            </Carousel>
+          </div>
+
+          <div className="flex gap-3 justify-center">
+            {imageGallery.map((src, index) => (
+              <button
+                key={index}
+                type="button"
+                className="h-16 w-16 rounded-xl overflow-hidden border border-border hover:border-primary transition-smooth"
+              >
+                <img
+                  src={src}
+                  alt={`${product.name} থাম্বনেইল ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
         </section>
 
         {/* Right: Info */}
