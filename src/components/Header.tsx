@@ -13,8 +13,8 @@ export const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border">
       {/* Top info bar */}
-      <div className="w-full bg-background text-[11px] sm:text-xs text-center py-1 border-b border-border/60">
-        <p className="text-muted-foreground">
+      <div className="w-full bg-background text-[11px] sm:text-xs py-1 border-b border-border/60 marquee">
+        <p className="text-muted-foreground marquee-inner">
           আপনার জন্য সাশ্রয়ী বাংলাদেশি অনলাইন শপ | ক্যাশ অন ডেলিভারি | ৪৮-৭২ ঘন্টার মধ্যে ফাস্ট ডেলিভারি
         </p>
       </div>
