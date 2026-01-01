@@ -114,11 +114,11 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter var', system-ui, -apple-system, sans-serif;
+    font-family: 'Hind Siliguri', system-ui, -apple-system, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', 'Inter var', system-ui, sans-serif;
+    font-family: 'Hind Siliguri', system-ui, -apple-system, sans-serif;
     font-weight: 700;
   }
 }
