@@ -17,6 +17,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Review {
   id: number;
@@ -258,84 +259,121 @@ const ProductDetails = () => {
         </section>
       </main>
 
-      {/* Reviews Section */}
+      {/* Details / Policy / Reviews Tabs */}
       <section className="border-t border-border bg-muted/40">
-        <div className="container mx-auto px-4 py-8 grid gap-8 lg:grid-cols-[2fr,1fr]">
-          <div>
-            <h2 className="text-xl font-heading font-semibold mb-4">কাস্টমার রিভিউ</h2>
-            <div className="space-y-4">
-              {reviews.map((review) => (
-                <Card key={review.id} className="animate-fade-in">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-semibold">{review.name}</span>
-                      <div className="flex items-center gap-1 text-sm">
-                        <Star className="h-4 w-4 text-yellow-500" />
-                        <span>{review.rating} / ৫</span>
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{review.comment}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
+        <div className="container mx-auto px-4 py-8">
+          <Tabs defaultValue="details" className="w-full">
+            <TabsList className="w-full justify-start overflow-x-auto rounded-full bg-background p-1 mb-4">
+              <TabsTrigger value="details" className="text-xs sm:text-sm px-4 sm:px-6">
+                পণ্যের বিস্তারিত
+              </TabsTrigger>
+              <TabsTrigger value="policy" className="text-xs sm:text-sm px-4 sm:px-6">
+                রিটার্ন পলিসি
+              </TabsTrigger>
+              <TabsTrigger value="reviews" className="text-xs sm:text-sm px-4 sm:px-6">
+                মোট রিভিউ ({reviews.length})
+              </TabsTrigger>
+            </TabsList>
 
-          <div>
-            <h3 className="text-lg font-heading font-semibold mb-3">
-              রিভিউ দিতে লগইন/রেজিস্ট্রেশন করুন
-            </h3>
-            <p className="text-xs text-muted-foreground mb-3">
-              এখন ডেমো হিসেবে সরাসরি নিচের ফর্ম পূরণ করে রিভিউ দিতে পারেন।
-            </p>
-            <form onSubmit={handleSubmitReview} className="space-y-3">
-              <div className="space-y-1">
-                <label className="text-sm font-medium">আপনার নাম</label>
-                <input
-                  type="text"
-                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
-                  value={form.name}
-                  onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                />
-                {errors.name && (
-                  <p className="text-xs text-destructive mt-1">{errors.name}</p>
-                )}
-              </div>
+            <TabsContent value="details" className="mt-4">
+              <Card>
+                <CardContent className="p-5 text-sm leading-relaxed space-y-2">
+                  <p className="font-semibold text-foreground">{product.name} – এক মেশিনেই সব কাজ!</p>
+                  <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                    <li>হাই স্পিড মোটর – দ্রুত ও কার্যকর গ্রাইন্ডিং পারফরমেন্স।</li>
+                    <li>স্টেইনলেস স্টিল ব্লেড – দীর্ঘ সময় ব্যবহারযোগ্য ও টেকসই।</li>
+                    <li>কমপ্যাক্ট ডিজাইন – সহজে বহনযোগ্য ও কম জায়গা নেয়।</li>
+                    <li>ইজি টু ক্লিন – ব্যবহার শেষে অল্প সময়ে পরিষ্কার করা যায়।</li>
+                    <li>মাল্টি পারপাজ ইউজ – মসলা, সবজি, ডাল ইত্যাদি গ্রাইন্ড করার জন্য উপযুক্ত।</li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-              <div className="space-y-1">
-                <label className="text-sm font-medium">রেটিং নির্বাচন করুন</label>
-                <select
-                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
-                  value={form.rating}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, rating: Number(e.target.value) || 5 }))
-                  }
-                >
-                  {[5, 4, 3, 2, 1].map((r) => (
-                    <option key={r} value={r}>
-                      {r} / ৫
-                    </option>
+            <TabsContent value="policy" className="mt-4">
+              <Card>
+                <CardContent className="p-5 text-sm text-muted-foreground space-y-2">
+                  <p>• পণ্য ডেলিভারির সময় ভিডিও করে আনবক্স করলে রিপ্লেসমেন্ট সহজ হবে।</p>
+                  <p>• ম্যানুফ্যাকচারিং ডিফেক্ট থাকলে ৩ দিনের মধ্যে রিটার্নের সুযোগ।</p>
+                  <p>• ব্যবহারজনিত ক্ষতির ক্ষেত্রে রিটার্ন প্রযোজ্য নয়।</p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="reviews" className="mt-4">
+              <div className="grid gap-6 lg:grid-cols-[1.4fr,1fr] items-start">
+                <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+                  {reviews.map((review) => (
+                    <Card key={review.id} className="animate-fade-in">
+                      <CardContent className="p-3">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-semibold text-sm">{review.name}</span>
+                          <div className="flex items-center gap-1 text-xs">
+                            <Star className="h-3 w-3 text-yellow-500" />
+                            <span>{review.rating} / ৫</span>
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground">{review.comment}</p>
+                      </CardContent>
+                    </Card>
                   ))}
-                </select>
-              </div>
+                </div>
 
-              <div className="space-y-1">
-                <label className="text-sm font-medium">আপনার রিভিউ</label>
-                <textarea
-                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm min-h-[90px]"
-                  value={form.comment}
-                  onChange={(e) => setForm((f) => ({ ...f, comment: e.target.value }))}
-                />
-                {errors.comment && (
-                  <p className="text-xs text-destructive mt-1">{errors.comment}</p>
-                )}
-              </div>
+                <div>
+                  <h3 className="text-sm font-heading font-semibold mb-2 flex items-center gap-1">
+                    <MessageCircle className="h-4 w-4" /> দ্রুত রিভিউ দিন
+                  </h3>
+                  <form onSubmit={handleSubmitReview} className="space-y-2 text-xs">
+                    <div className="space-y-1">
+                      <label className="font-medium">আপনার নাম</label>
+                      <input
+                        type="text"
+                        className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs"
+                        value={form.name}
+                        onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                      />
+                      {errors.name && (
+                        <p className="text-[11px] text-destructive mt-1">{errors.name}</p>
+                      )}
+                    </div>
 
-              <Button type="submit" className="w-full" variant="hero">
-                রিভিউ সাবমিট করুন
-              </Button>
-            </form>
-          </div>
+                    <div className="space-y-1">
+                      <label className="font-medium">রেটিং</label>
+                      <select
+                        className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs"
+                        value={form.rating}
+                        onChange={(e) =>
+                          setForm((f) => ({ ...f, rating: Number(e.target.value) || 5 }))
+                        }
+                      >
+                        {[5, 4, 3, 2, 1].map((r) => (
+                          <option key={r} value={r}>
+                            {r} / ৫
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="font-medium">রিভিউ</label>
+                      <textarea
+                        className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs min-h-[70px]"
+                        value={form.comment}
+                        onChange={(e) => setForm((f) => ({ ...f, comment: e.target.value }))}
+                      />
+                      {errors.comment && (
+                        <p className="text-[11px] text-destructive mt-1">{errors.comment}</p>
+                      )}
+                    </div>
+
+                    <Button type="submit" className="w-full" size="sm" variant="hero">
+                      রিভিউ সাবমিট করুন
+                    </Button>
+                  </form>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
 
