@@ -1,12 +1,256 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { ProductCard } from "@/components/ProductCard";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ChevronRight, TrendingUp, Zap, Shield, Truck } from "lucide-react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import heroBanner from "@/assets/hero-banner.jpg";
+
+const categories = [
+  { id: "baby", name: "Baby Items", slug: "baby", color: "bg-pink-100 text-pink-700" },
+  { id: "women", name: "Women", slug: "women", color: "bg-purple-100 text-purple-700" },
+  { id: "men", name: "Men", slug: "men", color: "bg-blue-100 text-blue-700" },
+  { id: "electronics", name: "Electronics", slug: "electronics", color: "bg-orange-100 text-orange-700" },
+  { id: "trendy", name: "Trending", slug: "trendy", color: "bg-green-100 text-green-700" },
+];
+
+const demoProducts = [
+  {
+    id: "1",
+    name: "Premium Baby Stroller",
+    price: 12500,
+    image: "https://images.unsplash.com/photo-1588773163629-e90a6c4f0cc6?w=500",
+    category: "Baby Items",
+    discount: 20,
+  },
+  {
+    id: "2",
+    name: "Women's Summer Dress",
+    price: 2500,
+    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500",
+    category: "Women",
+    discount: 15,
+  },
+  {
+    id: "3",
+    name: "Men's Smart Watch",
+    price: 8500,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500",
+    category: "Electronics",
+  },
+  {
+    id: "4",
+    name: "Wireless Earbuds",
+    price: 3500,
+    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500",
+    category: "Electronics",
+    discount: 25,
+  },
+  {
+    id: "5",
+    name: "Men's Casual Shirt",
+    price: 1800,
+    image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500",
+    category: "Men",
+  },
+  {
+    id: "6",
+    name: "Women's Handbag",
+    price: 4200,
+    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500",
+    category: "Women",
+    discount: 10,
+  },
+];
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      
+      {/* Hero Section */}
+      <section className="relative gradient-hero overflow-hidden">
+        <div className="container mx-auto px-4 py-16 md:py-24">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <Badge className="mb-4 gradient-warm text-white border-0">
+                <TrendingUp className="h-3 w-3 mr-1" />
+                New Arrivals
+              </Badge>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 leading-tight">
+                Shop Your
+                <br />
+                <span className="gradient-warm bg-clip-text text-transparent">
+                  Favorite Products
+                </span>
+              </h1>
+              <p className="text-lg text-muted-foreground mb-8 max-w-lg">
+                Discover amazing deals on baby items, fashion, electronics, and trending products. Free shipping on orders over ৳1000!
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Button asChild size="xl" variant="hero">
+                  <Link to="/categories/trendy">
+                    Shop Now
+                    <ChevronRight className="h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button asChild size="xl" variant="outline">
+                  <Link to="/categories/electronics">Browse Categories</Link>
+                </Button>
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="relative rounded-2xl overflow-hidden shadow-strong">
+                <img 
+                  src={heroBanner}
+                  alt="Shopping collection"
+                  className="w-full h-auto"
+                />
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-12 border-y border-border bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full gradient-cool flex items-center justify-center flex-shrink-0">
+                <Truck className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm">Free Shipping</h3>
+                <p className="text-xs text-muted-foreground">On orders over ৳1000</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full gradient-warm flex items-center justify-center flex-shrink-0">
+                <Zap className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm">Fast Delivery</h3>
+                <p className="text-xs text-muted-foreground">2-5 business days</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full gradient-cool flex items-center justify-center flex-shrink-0">
+                <Shield className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm">Secure Payment</h3>
+                <p className="text-xs text-muted-foreground">100% protected</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full gradient-warm flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm">Best Prices</h3>
+                <p className="text-xs text-muted-foreground">Guaranteed deals</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Categories */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+              Shop by Category
+            </h2>
+            <p className="text-muted-foreground">Find everything you need in one place</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {categories.map((cat, idx) => (
+              <motion.div
+                key={cat.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: idx * 0.1 }}
+              >
+                <Link to={`/categories/${cat.slug}`}>
+                  <div className="p-6 rounded-xl border border-border hover:shadow-medium transition-smooth group cursor-pointer text-center">
+                    <div className={`w-16 h-16 ${cat.color} rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-bounce`}>
+                      <span className="text-2xl font-bold">{cat.name.charAt(0)}</span>
+                    </div>
+                    <h3 className="font-semibold group-hover:text-primary transition-smooth">
+                      {cat.name}
+                    </h3>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-2">
+                Featured Products
+              </h2>
+              <p className="text-muted-foreground">Top picks just for you</p>
+            </div>
+            <Button asChild variant="outline">
+              <Link to="/categories/trendy">
+                View All
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {demoProducts.map((product) => (
+              <ProductCard key={product.id} {...product} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 gradient-hero">
+        <div className="container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-2xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+              Ready to Start Shopping?
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              Join thousands of happy customers. Create your account and get access to exclusive deals!
+            </p>
+            <Button asChild size="xl" variant="hero">
+              <Link to="/auth">
+                Get Started Today
+                <ChevronRight className="h-5 w-5" />
+              </Link>
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 };
