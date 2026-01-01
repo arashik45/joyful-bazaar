@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -84,16 +84,27 @@ export const ProductCard = ({
           </div>
         </CardContent>
 
-        <CardFooter className="p-4 pt-0">
-          <Button 
-            variant="shop" 
+        <CardFooter className="p-4 pt-0 flex flex-col gap-2">
+          <Button
+            variant="shop"
             className="w-full"
             onClick={(e) => {
               e.preventDefault();
-              // Cart logic
+              // Order now logic
             }}
           >
             <ShoppingCart className="h-4 w-4" />
+            অর্ডার করুন
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={(e) => {
+              e.preventDefault();
+              // Add to cart logic
+            }}
+          >
+            <ShoppingBag className="h-4 w-4" />
             কার্টে যোগ করুন
           </Button>
         </CardFooter>
