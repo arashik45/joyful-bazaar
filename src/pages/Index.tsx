@@ -177,33 +177,40 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Categories */}
+      {/* Recommended Products section styled like reference */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              ক্যাটাগরি অনুযায়ী শপ করুন
-            </h2>
-            <p className="text-muted-foreground">আপনার প্রয়োজনীয় সব পণ্য এক জায়গায়</p>
+          <div className="flex items-center justify-between mb-8">
+            <div className="text-center md:text-left w-full md:w-auto">
+              <div className="flex items-center justify-center md:justify-start gap-4 mb-1">
+                <span className="hidden md:inline-block h-px w-10 bg-primary" />
+                <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground">
+                  রেকমেন্ডেড পণ্য
+                </h2>
+                <span className="h-px w-10 bg-primary" />
+              </div>
+              <p className="text-sm md:text-base text-muted-foreground">
+                আপনার জন্য বিশেষভাবে প্রস্তুতকৃত এক্সক্লুসিভ পণ্য
+              </p>
+            </div>
+
+            <Button asChild variant="outline" className="hidden sm:inline-flex rounded-full text-sm">
+              <Link to="/categories/trendy" className="flex items-center gap-2">
+                সব দেখুন
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {categories.map((cat, idx) => (
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {demoProducts.slice(0, 4).map((product, idx) => (
               <motion.div
-                key={cat.id}
+                key={product.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: idx * 0.1 }}
               >
-                <Link to={`/categories/${cat.slug}`}>
-                  <div className="p-6 rounded-xl border border-border hover:shadow-medium transition-smooth group cursor-pointer text-center">
-                    <div className={`w-16 h-16 ${cat.color} rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-bounce`}>
-                      <span className="text-2xl font-bold">{cat.name.charAt(0)}</span>
-                    </div>
-                    <h3 className="font-semibold group-hover:text-primary transition-smooth">
-                      {cat.name}
-                    </h3>
-                  </div>
-                </Link>
+                <ProductCard {...product} />
               </motion.div>
             ))}
           </div>
