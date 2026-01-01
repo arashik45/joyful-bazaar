@@ -11,7 +11,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCart } from "@/context/CartContext";
 
-export const Header = () => {
+type HeaderProps = {
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+};
+
+export const Header = ({ searchValue = "", onSearchChange }: HeaderProps) => {
   const { totalItems } = useCart();
   const [highlight, setHighlight] = useState(false);
 
@@ -56,6 +61,8 @@ export const Header = () => {
             <Input
               placeholder="প্রোডাক্ট খুঁজুন এখানে..."
               className="pl-9 pr-4 h-10 rounded-full bg-background border-border focus-visible:ring-primary"
+              value={searchValue}
+              onChange={(e) => onSearchChange?.(e.target.value)}
             />
           </div>
         </div>
