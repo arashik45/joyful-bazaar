@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -36,6 +37,8 @@ export const ProductCard = ({
   const [open, setOpen] = useState(false);
   const discountedPrice = discount ? price - (price * discount) / 100 : price;
   const { addItem } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const inWishlist = isInWishlist(id);
   const navigate = useNavigate();
 
   const handleAddToCart = () => {
@@ -91,10 +94,14 @@ export const ProductCard = ({
                 className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-smooth bg-background/80 hover:bg-background"
                 onClick={(e) => {
                   e.preventDefault();
-                  // Wishlist logic
+                  if (inWishlist) {
+                    removeFromWishlist(id);
+                  } else {
+                    addToWishlist({ id, name, price, image, category, discount, quantity: 1 });
+                  }
                 }}
               >
-                <Heart className="h-4 w-4" />
+                <Heart className={`h-4 w-4 ${inWishlist ? "text-destructive" : ""}`} />
               </Button>
             </div>
           </Link>
