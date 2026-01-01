@@ -7,11 +7,13 @@ const CategoryPage = () => {
   const { category } = useParams();
   
   const categoryTitles: Record<string, string> = {
-    baby: "বেবি আইটেম",
-    women: "নারী ফ্যাশন",
-    men: "পুরুষ ফ্যাশন",
-    electronics: "ইলেকট্রনিক্স ও গ্যাজেট",
-    trendy: "ট্রেন্ডি পণ্য",
+    "mens-fashion": "Men’s Fashion",
+    "womens-fashion": "Women’s Fashion",
+    "kids-baby": "Kids & Baby",
+    "islamic-products": "Islamic Products",
+    "electronics-gadgets": "Electronics & Gadgets",
+    "home-lifestyle": "Home & Lifestyle",
+    "kitchen-accessories": "Kitchen Accessories",
   };
 
   const demoProducts = [

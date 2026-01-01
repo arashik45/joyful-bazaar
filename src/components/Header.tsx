@@ -71,7 +71,37 @@ export const Header = () => {
         <div className="container mx-auto px-4 flex items-center justify-between gap-4 py-2 text-sm font-medium">
           <div className="flex items-center gap-6">
             <Link to="/" className="hover-scale">হোম</Link>
-            <Link to="/categories/baby" className="hover-scale">ক্যাটাগরি</Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-1 hover-scale">
+                  <span>ক্যাটাগরি</span>
+                  <span className="text-xs">▼</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-52">
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/mens-fashion">Men’s Fashion</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/womens-fashion">Women’s Fashion</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/kids-baby">Kids &amp; Baby</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/islamic-products">Islamic Products</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/electronics-gadgets">Electronics &amp; Gadgets</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/home-lifestyle">Home &amp; Lifestyle</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/kitchen-accessories">Kitchen Accessories</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Link to="/categories/trendy" className="hover-scale hidden sm:inline">সকল পণ্য</Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -103,15 +133,30 @@ export const Header = () => {
                   <Menu className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuItem asChild>
                   <Link to="/">হোম</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/categories/baby">ক্যাটাগরি</Link>
+                  <Link to="/categories/mens-fashion">Men’s Fashion</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/categories/trendy">সকল পণ্য</Link>
+                  <Link to="/categories/womens-fashion">Women’s Fashion</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/kids-baby">Kids &amp; Baby</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/islamic-products">Islamic Products</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/electronics-gadgets">Electronics &amp; Gadgets</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/home-lifestyle">Home &amp; Lifestyle</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/kitchen-accessories">Kitchen Accessories</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/auth">অ্যাকাউন্ট (লগইন/রেজি)</Link>
