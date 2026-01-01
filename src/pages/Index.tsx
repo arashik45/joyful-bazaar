@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ProductCard } from "@/components/ProductCard";
@@ -66,9 +67,21 @@ const demoProducts = [
 ];
 
 const Index = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredProducts = useMemo(
+    () =>
+      demoProducts.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [searchTerm]
+  );
+
+  const recommendedProducts = filteredProducts.slice(0, 4);
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Header searchValue={searchTerm} onSearchChange={setSearchTerm} />
       
       {/* Hero Section styled similar to reference */}
       <section className="relative py-8 sm:py-10 bg-background">
@@ -203,7 +216,7 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {demoProducts.slice(0, 4).map((product, idx) => (
+            {recommendedProducts.map((product, idx) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -241,7 +254,7 @@ const Index = () => {
             </Button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {demoProducts.map((product) => (
+            {(searchTerm ? filteredProducts : demoProducts).map((product) => (
               <ProductCard key={product.id} {...product} />
             ))}
           </div>
