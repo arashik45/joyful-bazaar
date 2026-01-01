@@ -10,14 +10,14 @@ const Wishlist = () => {
       <Header />
       
       <main className="flex-1 container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-heading font-bold mb-8">My Wishlist</h1>
+        <h1 className="text-3xl font-heading font-bold mb-8">উইশলিস্ট</h1>
         
         <Card>
           <CardContent className="p-12 text-center">
             <Heart className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-            <h2 className="text-xl font-semibold mb-2">Your wishlist is empty</h2>
-            <p className="text-muted-foreground mb-6">Save your favorite items to your wishlist</p>
-            <Button variant="hero">Browse Products</Button>
+            <h2 className="text-xl font-semibold mb-2">আপনার উইশলিস্ট খালি</h2>
+            <p className="text-muted-foreground mb-6">আপনার পছন্দের পণ্যগুলো এখানে সেভ করুন</p>
+            <Button variant="hero">পণ্য দেখুন</Button>
           </CardContent>
         </Card>
       </main>

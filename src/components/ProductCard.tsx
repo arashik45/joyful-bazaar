@@ -74,7 +74,7 @@ export const ProductCard = ({
           </Link>
           <div className="flex items-center gap-1 mb-2">
             <span className="text-yellow-500">★</span>
-            <span className="text-sm text-muted-foreground">{rating}</span>
+            <span className="text-sm text-muted-foreground">{rating} / ৫</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-lg font-bold text-primary">৳{discountedPrice.toFixed(2)}</span>
@@ -94,7 +94,7 @@ export const ProductCard = ({
             }}
           >
             <ShoppingCart className="h-4 w-4" />
-            Add to Cart
+            কার্টে যোগ করুন
           </Button>
         </CardFooter>
       </Card>

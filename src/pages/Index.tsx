@@ -132,8 +132,8 @@ const Index = () => {
                 <Truck className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-sm">Free Shipping</h3>
-                <p className="text-xs text-muted-foreground">On orders over ৳1000</p>
+                <h3 className="font-semibold text-sm">ফ্রি ডেলিভারি</h3>
+                <p className="text-xs text-muted-foreground">৳১০০০+ অর্ডারে</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -141,8 +141,8 @@ const Index = () => {
                 <Zap className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-sm">Fast Delivery</h3>
-                <p className="text-xs text-muted-foreground">2-5 business days</p>
+                <h3 className="font-semibold text-sm">দ্রুত ডেলিভারি</h3>
+                <p className="text-xs text-muted-foreground">২-৫ কর্মদিবসের মধ্যে</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -150,8 +150,8 @@ const Index = () => {
                 <Shield className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-sm">Secure Payment</h3>
-                <p className="text-xs text-muted-foreground">100% protected</p>
+                <h3 className="font-semibold text-sm">সিকিউর পেমেন্ট</h3>
+                <p className="text-xs text-muted-foreground">১০০% নিরাপদ</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -159,8 +159,8 @@ const Index = () => {
                 <TrendingUp className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-sm">Best Prices</h3>
-                <p className="text-xs text-muted-foreground">Guaranteed deals</p>
+                <h3 className="font-semibold text-sm">সেরা দাম</h3>
+                <p className="text-xs text-muted-foreground">অফিশিয়াল গ্যারান্টি</p>
               </div>
             </div>
           </div>
@@ -172,9 +172,9 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              Shop by Category
+              ক্যাটাগরি অনুযায়ী শপ করুন
             </h2>
-            <p className="text-muted-foreground">Find everything you need in one place</p>
+            <p className="text-muted-foreground">আপনার প্রয়োজনীয় সব পণ্য এক জায়গায়</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {categories.map((cat, idx) => (
@@ -206,13 +206,13 @@ const Index = () => {
           <div className="flex items-center justify-between mb-12">
             <div>
               <h2 className="text-3xl md:text-4xl font-heading font-bold mb-2">
-                Featured Products
+                ফিচার্ড পণ্য
               </h2>
-              <p className="text-muted-foreground">Top picks just for you</p>
+              <p className="text-muted-foreground">আপনার জন্য বাছাইকৃত সেরা পণ্য</p>
             </div>
             <Button asChild variant="outline">
               <Link to="/categories/trendy">
-                View All
+                সব দেখুন
                 <ChevronRight className="h-4 w-4" />
               </Link>
             </Button>
@@ -235,14 +235,14 @@ const Index = () => {
             className="max-w-2xl mx-auto"
           >
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              Ready to Start Shopping?
+              শপিং শুরু করতে প্রস্তুত?
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Join thousands of happy customers. Create your account and get access to exclusive deals!
+              হাজারো কাস্টমারের সাথে যোগ দিন। একাউন্ট খুলেই পান এক্সক্লুসিভ অফার!
             </p>
             <Button asChild size="xl" variant="hero">
               <Link to="/auth">
-                Get Started Today
+                এখনই একাউন্ট খুলুন
                 <ChevronRight className="h-5 w-5" />
               </Link>
             </Button>
