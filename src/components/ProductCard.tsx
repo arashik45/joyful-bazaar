@@ -41,6 +41,7 @@ export const ProductCard = ({
   const handleAddToCart = () => {
     addItem({ id, name, price, image, category, discount });
     setOpen(true);
+    setTimeout(() => setOpen(false), 2000);
   };
 
   const handleOrderNow = () => {
