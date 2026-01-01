@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Heart, ShoppingCart, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
+import { useCart } from "@/context/CartContext";
 
 interface ProductCardProps {
   id: string;
@@ -15,16 +17,27 @@ interface ProductCardProps {
   rating?: number;
 }
 
-export const ProductCard = ({ 
-  id, 
-  name, 
-  price, 
-  image, 
-  category, 
+export const ProductCard = ({
+  id,
+  name,
+  price,
+  image,
+  category,
   discount,
-  rating = 4.5 
+  rating = 4.5,
 }: ProductCardProps) => {
-  const discountedPrice = discount ? price - (price * discount / 100) : price;
+  const discountedPrice = discount ? price - (price * discount) / 100 : price;
+  const { addItem } = useCart();
+  const navigate = useNavigate();
+
+  const handleAddToCart = () => {
+    addItem({ id, name, price, image, category, discount });
+  };
+
+  const handleOrderNow = () => {
+    addItem({ id, name, price, image, category, discount });
+    navigate("/cart");
+  };
 
   return (
     <motion.div
@@ -37,8 +50,8 @@ export const ProductCard = ({
       <Card className="h-full overflow-hidden border-border hover:shadow-medium transition-smooth">
         <Link to={`/product/${id}`}>
           <div className="relative aspect-square overflow-hidden bg-muted">
-            <img 
-              src={image} 
+            <img
+              src={image}
               alt={name}
               className="w-full h-full object-cover group-hover:scale-105 transition-smooth"
             />
@@ -79,7 +92,9 @@ export const ProductCard = ({
           <div className="flex items-center gap-2">
             <span className="text-lg font-bold text-primary">৳{discountedPrice.toFixed(2)}</span>
             {discount && (
-              <span className="text-sm text-muted-foreground line-through">৳{price.toFixed(2)}</span>
+              <span className="text-sm text-muted-foreground line-through">
+                ৳{price.toFixed(2)}
+              </span>
             )}
           </div>
         </CardContent>
@@ -90,7 +105,7 @@ export const ProductCard = ({
             className="w-full"
             onClick={(e) => {
               e.preventDefault();
-              // Order now logic
+              handleOrderNow();
             }}
           >
             <ShoppingCart className="h-4 w-4" />
@@ -101,7 +116,7 @@ export const ProductCard = ({
             className="w-full"
             onClick={(e) => {
               e.preventDefault();
-              // Add to cart logic
+              handleAddToCart();
             }}
           >
             <ShoppingBag className="h-4 w-4" />
