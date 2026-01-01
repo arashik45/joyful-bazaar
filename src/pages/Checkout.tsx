@@ -13,6 +13,24 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { z } from "zod";
+
+const checkoutSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "কমপক্ষে ২ অক্ষরের নাম লিখুন")
+    .max(100, "নাম ১০০ অক্ষরের কম হতে হবে"),
+  phone: z
+    .string()
+    .trim()
+    .regex(/^01[0-9]{9}$/, "সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন 01XXXXXXXXX)"),
+  address: z
+    .string()
+    .trim()
+    .min(10, "বিস্তারিত ঠিকানা লিখুন")
+    .max(300, "ঠিকানা ৩০০ অক্ষরের কম হতে হবে"),
+});
 
 const Checkout = () => {
   const { items, totalPrice, totalItems } = useCart();
@@ -21,10 +39,31 @@ const Checkout = () => {
   const [address, setAddress] = useState("");
   const [insideDhaka, setInsideDhaka] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
+  const [errors, setErrors] = useState<{ name?: string; phone?: string; address?: string }>({});
   const navigate = useNavigate();
 
   const deliveryCharge = useMemo(() => (insideDhaka ? 80 : 130), [insideDhaka]);
   const grandTotal = useMemo(() => totalPrice + deliveryCharge, [totalPrice, deliveryCharge]);
+
+  const handleSubmit = () => {
+    const result = checkoutSchema.safeParse({ name, phone, address });
+    if (!result.success) {
+      const fieldErrors: { name?: string; phone?: string; address?: string } = {};
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0] as keyof typeof fieldErrors;
+        fieldErrors[field] = issue.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setErrors({});
+    setSuccessOpen(true);
+    setTimeout(() => {
+      setSuccessOpen(false);
+      navigate("/order-success");
+    }, 2000);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -70,6 +109,9 @@ const Checkout = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
+                  {errors.name && (
+                    <p className="text-xs text-destructive mt-1">{errors.name}</p>
+                  )}
                 </div>
                 <div className="space-y-1">
                   <label className="text-sm font-medium">আপনার মোবাইল নাম্বার</label>
@@ -78,6 +120,9 @@ const Checkout = () => {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />
+                  {errors.phone && (
+                    <p className="text-xs text-destructive mt-1">{errors.phone}</p>
+                  )}
                 </div>
                 <div className="space-y-1">
                   <label className="text-sm font-medium">আপনার সম্পূর্ণ ঠিকানা</label>
@@ -86,6 +131,9 @@ const Checkout = () => {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                   />
+                  {errors.address && (
+                    <p className="text-xs text-destructive mt-1">{errors.address}</p>
+                  )}
                 </div>
               </div>
 
