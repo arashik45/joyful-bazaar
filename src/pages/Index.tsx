@@ -81,27 +81,27 @@ const Index = () => {
             >
               <Badge className="mb-4 gradient-warm text-white border-0">
                 <TrendingUp className="h-3 w-3 mr-1" />
-                New Arrivals
+                নতুন কালেকশন
               </Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 leading-tight">
-                Shop Your
+                আপনার প্রিয়
                 <br />
                 <span className="gradient-warm bg-clip-text text-transparent">
-                  Favorite Products
+                  অনলাইন শপ
                 </span>
               </h1>
               <p className="text-lg text-muted-foreground mb-8 max-w-lg">
-                Discover amazing deals on baby items, fashion, electronics, and trending products. Free shipping on orders over ৳1000!
+                বেবি আইটেম, ফ্যাশন, ইলেকট্রনিক্স ও ট্রেন্ডি সব পণ্য একসাথে। ৳১০০০+ অর্ডারে ফ্রি ডেলিভারি।
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button asChild size="xl" variant="hero">
                   <Link to="/categories/trendy">
-                    Shop Now
+                    এখনই অর্ডার করুন
                     <ChevronRight className="h-5 w-5" />
                   </Link>
                 </Button>
                 <Button asChild size="xl" variant="outline">
-                  <Link to="/categories/electronics">Browse Categories</Link>
+                  <Link to="/categories/electronics">সব ক্যাটাগরি দেখুন</Link>
                 </Button>
               </div>
             </motion.div>

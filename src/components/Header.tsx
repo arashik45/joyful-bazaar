@@ -17,9 +17,9 @@ export const Header = () => {
         <div className="flex items-center justify-between py-3 border-b border-border/50">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 gradient-warm rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">S</span>
+              <span className="text-white font-bold text-lg">শ</span>
             </div>
-            <span className="text-xl font-heading font-bold">ShopBD</span>
+            <span className="text-xl font-heading font-bold">আমার শপ</span>
           </Link>
           
           {/* Search Bar */}
@@ -53,22 +53,21 @@ export const Header = () => {
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className="hidden md:flex items-center justify-center gap-6 py-3">
           <Link to="/categories/baby" className="text-sm font-medium hover:text-primary transition-smooth">
-            Baby Items
+            বেবি আইটেম
           </Link>
           <Link to="/categories/women" className="text-sm font-medium hover:text-primary transition-smooth">
-            Women
+            নারী
           </Link>
           <Link to="/categories/men" className="text-sm font-medium hover:text-primary transition-smooth">
-            Men
+            পুরুষ
           </Link>
           <Link to="/categories/electronics" className="text-sm font-medium hover:text-primary transition-smooth">
-            Electronics
+            ইলেকট্রনিক্স
           </Link>
           <Link to="/categories/trendy" className="text-sm font-medium hover:text-primary transition-smooth">
-            Trending
+            ট্রেন্ডি পণ্য
           </Link>
         </nav>
 
