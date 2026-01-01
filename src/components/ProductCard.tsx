@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Heart, ShoppingCart, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext";
+import { toast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
   id: string;
@@ -32,13 +32,20 @@ export const ProductCard = ({
 
   const handleAddToCart = () => {
     addItem({ id, name, price, image, category, discount });
+    toast({
+      title: "কার্টে যোগ হয়েছে",
+      description: `${name} কার্টে যোগ করা হয়েছে।`,
+    });
   };
 
   const handleOrderNow = () => {
     addItem({ id, name, price, image, category, discount });
+    toast({
+      title: "অর্ডার প্রসেস শুরু",
+      description: `${name} এর জন্য চেকআউটে নিয়ে যাওয়া হচ্ছে।`,
+    });
     navigate("/cart");
   };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
