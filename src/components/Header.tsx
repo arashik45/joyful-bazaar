@@ -19,6 +19,11 @@ type HeaderProps = {
 export const Header = ({ searchValue = "", onSearchChange }: HeaderProps) => {
   const { totalItems } = useCart();
   const [highlight, setHighlight] = useState(false);
+  const [searchInput, setSearchInput] = useState(searchValue);
+
+  useEffect(() => {
+    setSearchInput(searchValue);
+  }, [searchValue]);
 
   useEffect(() => {
     if (totalItems > 0) {
@@ -61,8 +66,11 @@ export const Header = ({ searchValue = "", onSearchChange }: HeaderProps) => {
             <Input
               placeholder="প্রোডাক্ট খুঁজুন এখানে..."
               className="pl-9 pr-4 h-10 rounded-full bg-background border-border focus-visible:ring-primary"
-              value={searchValue}
-              onChange={(e) => onSearchChange?.(e.target.value)}
+              value={searchInput}
+              onChange={(e) => {
+                setSearchInput(e.target.value);
+                onSearchChange?.(e.target.value);
+              }}
             />
           </div>
         </div>
