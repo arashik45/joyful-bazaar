@@ -8,8 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useCart } from "@/context/CartContext";
 
 export const Header = () => {
+  const { totalItems } = useCart();
+
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border">
       {/* Top info bar */}
@@ -57,10 +60,15 @@ export const Header = () => {
               <User className="h-5 w-5" />
             </Link>
           </Button>
-          <Button variant="ghost" asChild className="gap-1">
+          <Button variant="ghost" asChild className="gap-1 relative">
             <Link to="/cart" className="flex items-center gap-1">
               <ShoppingCart className="h-5 w-5" />
-              <span className="hidden sm:inline text-sm">কার্ট</span>
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-destructive text-destructive-foreground text-[11px] px-1 shadow-soft">
+                  {totalItems}
+                </span>
+              )}
+              <span className="hidden sm:inline text-sm ml-1">কার্ট</span>
             </Link>
           </Button>
         </div>
