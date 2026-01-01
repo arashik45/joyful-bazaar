@@ -11,91 +11,102 @@ import {
 
 export const Header = () => {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="container mx-auto px-4">
-        {/* Top Bar */}
-        <div className="flex items-center justify-between py-3 border-b border-border/50">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 gradient-warm rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">শ</span>
-            </div>
-            <span className="text-xl font-heading font-bold">আমার শপ</span>
-          </Link>
-          
-          {/* Search Bar */}
-          <div className="hidden md:flex flex-1 max-w-2xl mx-8">
-            <div className="relative w-full">
-              <Input 
-                placeholder="প্রোডাক্ট খুঁজুন..." 
-                className="pl-10 pr-4 h-10 w-full"
-              />
-            </div>
-          </div>
+    <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border">
+      {/* Top info bar */}
+      <div className="w-full bg-background text-[11px] sm:text-xs text-center py-1 border-b border-border/60">
+        <p className="text-muted-foreground">
+          আপনার জন্য সাশ্রয়ী বাংলাদেশি অনলাইন শপ | ক্যাশ অন ডেলিভারি | ৪৮-৭২ ঘন্টার মধ্যে ফাস্ট ডেলিভারি
+        </p>
+      </div>
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/wishlist">
-                <Heart className="h-5 w-5" />
-              </Link>
-            </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/cart">
-                <ShoppingCart className="h-5 w-5" />
-              </Link>
-            </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/auth">
-                <User className="h-5 w-5" />
-              </Link>
-            </Button>
+      {/* Main header */}
+      <div className="container mx-auto px-4 py-3 flex items-center gap-3 sm:gap-6">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2 shrink-0">
+          <div className="w-9 h-9 rounded-lg gradient-warm flex items-center justify-center shadow-soft">
+            <span className="text-white font-bold text-lg">শ</span>
+          </div>
+          <div className="leading-tight hidden xs:block">
+            <span className="block text-lg sm:text-xl font-heading font-extrabold tracking-tight">
+              আমার শপ
+            </span>
+            <span className="block text-[11px] text-muted-foreground">
+              Bangladeshi Online Shop
+            </span>
+          </div>
+        </Link>
+
+        {/* Search bar */}
+        <div className="flex-1 flex justify-center">
+          <div className="w-full max-w-xl relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="প্রোডাক্ট খুঁজুন এখানে..."
+              className="pl-9 pr-4 h-10 rounded-full bg-background border-border focus-visible:ring-primary"
+            />
           </div>
         </div>
 
-        <nav className="hidden md:flex items-center justify-center gap-6 py-3">
-          <Link to="/categories/baby" className="text-sm font-medium hover:text-primary transition-smooth">
-            বেবি আইটেম
-          </Link>
-          <Link to="/categories/women" className="text-sm font-medium hover:text-primary transition-smooth">
-            নারী
-          </Link>
-          <Link to="/categories/men" className="text-sm font-medium hover:text-primary transition-smooth">
-            পুরুষ
-          </Link>
-          <Link to="/categories/electronics" className="text-sm font-medium hover:text-primary transition-smooth">
-            ইলেকট্রনিক্স
-          </Link>
-          <Link to="/categories/trendy" className="text-sm font-medium hover:text-primary transition-smooth">
-            ট্রেন্ডি পণ্য
-          </Link>
-        </nav>
+        {/* Right actions */}
+        <div className="flex items-center gap-3">
+          <Button asChild variant="hero" className="hidden sm:inline-flex px-5">
+            <Link to="/auth">লগইন / সাইন আপ</Link>
+          </Button>
+          <Button variant="ghost" size="icon" asChild className="sm:hidden">
+            <Link to="/auth">
+              <User className="h-5 w-5" />
+            </Link>
+          </Button>
+          <Button variant="ghost" asChild className="gap-1">
+            <Link to="/cart" className="flex items-center gap-1">
+              <ShoppingCart className="h-5 w-5" />
+              <span className="hidden sm:inline text-sm">কার্ট</span>
+            </Link>
+          </Button>
+        </div>
+      </div>
 
-        {/* Mobile Menu */}
-        <div className="md:hidden py-3">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48">
-              <DropdownMenuItem asChild>
-                <Link to="/categories/baby">বেবি আইটেম</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/categories/women">নারী</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/categories/men">পুরুষ</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/categories/electronics">ইলেকট্রনিক্স</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/categories/trendy">ট্রেন্ডি পণ্য</Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+      {/* Orange navigation bar */}
+      <div className="w-full bg-primary text-primary-foreground">
+        <div className="container mx-auto px-4 flex items-center justify-between gap-4 py-2 text-sm font-medium">
+          <div className="flex items-center gap-6">
+            <Link to="/" className="hover-scale">হোম</Link>
+            <Link to="/categories/baby" className="hover-scale">ক্যাটাগরি</Link>
+            <Link to="/categories/trendy" className="hover-scale hidden sm:inline">সকল পণ্য</Link>
+            <Link to="/offers" className="hover-scale hidden sm:inline">অফার</Link>
+            <Link to="/delivery" className="hover-scale hidden md:inline">ফ্রি ডেলিভারি</Link>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link to="/wishlist" className="hidden sm:inline hover-scale flex items-center gap-1">
+              <Heart className="h-4 w-4" />
+              <span>উইশলিস্ট</span>
+            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="bg-primary/20 hover:bg-primary/30">
+                  <Menu className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/baby">বেবি আইটেম</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/women">নারী</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/men">পুরুষ</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/electronics">ইলেকট্রনিক্স</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/categories/trendy">ট্রেন্ডি পণ্য</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
     </header>

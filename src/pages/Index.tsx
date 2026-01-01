@@ -70,53 +70,63 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      {/* Hero Section */}
-      <section className="relative gradient-hero overflow-hidden">
-        <div className="container mx-auto px-4 py-16 md:py-24">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
+      {/* Hero Section styled similar to reference */}
+      <section className="relative py-8 sm:py-10 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="rounded-3xl bg-primary/90 shadow-medium overflow-hidden flex flex-col md:flex-row items-stretch gap-0">
+            {/* Left image */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
+              className="md:w-1/2 bg-primary/80 flex items-center justify-center p-6 sm:p-10"
             >
-              <Badge className="mb-4 gradient-warm text-white border-0">
-                <TrendingUp className="h-3 w-3 mr-1" />
-                নতুন কালেকশন
-              </Badge>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 leading-tight">
-                আপনার প্রিয়
-                <br />
-                <span className="gradient-warm bg-clip-text text-transparent">
-                  অনলাইন শপ
-                </span>
-              </h1>
-              <p className="text-lg text-muted-foreground mb-8 max-w-lg">
-                বেবি আইটেম, ফ্যাশন, ইলেকট্রনিক্স ও ট্রেন্ডি সব পণ্য একসাথে। ৳১০০০+ অর্ডারে ফ্রি ডেলিভারি।
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Button asChild size="xl" variant="hero">
-                  <Link to="/categories/trendy">
-                    এখনই অর্ডার করুন
-                    <ChevronRight className="h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button asChild size="xl" variant="outline">
-                  <Link to="/categories/electronics">সব ক্যাটাগরি দেখুন</Link>
-                </Button>
+              <div className="relative max-w-sm w-full animate-float">
+                <div className="absolute -left-6 -top-6 w-14 h-14 rounded-full bg-background/40" />
+                <div className="absolute -right-4 -bottom-6 w-10 h-10 rounded-full bg-secondary/60" />
+                <img
+                  src={heroBanner}
+                  alt="অনলাইন শপ ব্যানার"
+                  className="relative rounded-2xl w-full h-auto shadow-strong border border-border/40 bg-background"
+                />
               </div>
             </motion.div>
+
+            {/* Right text */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="md:w-1/2 bg-primary px-6 sm:px-10 py-8 sm:py-10 flex flex-col justify-center text-primary-foreground"
             >
-              <div className="relative rounded-2xl overflow-hidden shadow-strong">
-                <img 
-                  src={heroBanner}
-                  alt="Shopping collection"
-                  className="w-full h-auto"
-                />
+              <Badge className="mb-3 bg-background text-foreground border-0 w-max px-3 py-1 text-[11px] sm:text-xs">
+                আপনার প্রিয় অনলাইন শপ
+              </Badge>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-extrabold leading-tight mb-2">
+                আমার শপ
+              </h1>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-extrabold mb-3 drop-shadow">
+                Online Shop
+              </h2>
+              <p className="text-sm sm:text-base mb-5 max-w-md text-primary-foreground/90">
+                আপনার প্রয়োজনের সেরা পণ্য এক জায়গায়। অর্ডার দিন ঘরে বসেই, সারা বাংলাদেশে হোম ডেলিভারি।
+              </p>
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                <Button asChild size="lg" variant="secondary" className="rounded-full px-6">
+                  <Link to="/categories/trendy" className="flex items-center gap-2">
+                    এখনই অর্ডার করুন
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+                <div className="flex items-center gap-3 text-sm sm:text-base">
+                  <div className="w-9 h-9 rounded-full bg-background text-foreground flex items-center justify-center">
+                    <Shield className="h-4 w-4" />
+                  </div>
+                  <div className="leading-tight">
+                    <p className="font-semibold">অর্ডার সাপোর্ট</p>
+                    <p className="text-xs sm:text-sm">০১৬০০০০০০০০</p>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>
