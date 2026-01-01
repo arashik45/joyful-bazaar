@@ -217,15 +217,21 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Featured Products */}
+      {/* New Products Section styled like reference */}
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-2">
-                ফিচার্ড পণ্য
-              </h2>
-              <p className="text-muted-foreground">আপনার জন্য বাছাইকৃত সেরা পণ্য</p>
+            <div className="w-full md:w-auto text-center md:text-left">
+              <div className="flex items-center justify-center md:justify-start gap-4 mb-1">
+                <span className="hidden md:inline-block h-px w-10 bg-primary" />
+                <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground">
+                  আমাদের নতুন প্রোডাক্টস
+                </h2>
+                <span className="h-px w-10 bg-primary" />
+              </div>
+              <p className="text-sm md:text-base text-muted-foreground">
+                আমাদের নতুনভাবে যুক্ত করা পণ্যগুলো দেখুন!
+              </p>
             </div>
             <Button asChild variant="outline">
               <Link to="/categories/trendy">
