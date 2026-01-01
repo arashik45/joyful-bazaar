@@ -16,20 +16,20 @@ const Auth = () => {
           <Tabs defaultValue="login" className="w-full">
             <CardHeader>
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                <TabsTrigger value="login">লগইন</TabsTrigger>
+                <TabsTrigger value="signup">সাইন আপ</TabsTrigger>
               </TabsList>
             </CardHeader>
 
             <TabsContent value="login">
               <CardContent className="space-y-4">
-                <CardTitle>Welcome Back</CardTitle>
+                <CardTitle>পুনরায় স্বাগতম</CardTitle>
                 <CardDescription>
-                  Enter your credentials to access your account
+                  আপনার একাউন্টে ঢোকার জন্য তথ্য দিন
                 </CardDescription>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="login-email">Email</Label>
+                    <Label htmlFor="login-email">ইমেইল</Label>
                     <Input 
                       id="login-email" 
                       type="email" 
@@ -37,7 +37,7 @@ const Auth = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="login-password">Password</Label>
+                    <Label htmlFor="login-password">পাসওয়ার্ড</Label>
                     <Input 
                       id="login-password" 
                       type="password" 
@@ -48,30 +48,30 @@ const Auth = () => {
               </CardContent>
               <CardFooter className="flex flex-col gap-3">
                 <Button className="w-full" variant="hero">
-                  Sign In
+                  লগইন করুন
                 </Button>
                 <Button variant="link" className="text-sm">
-                  Forgot password?
+                  পাসওয়ার্ড ভুলে গেছেন?
                 </Button>
               </CardFooter>
             </TabsContent>
 
             <TabsContent value="signup">
               <CardContent className="space-y-4">
-                <CardTitle>Create Account</CardTitle>
+                <CardTitle>নতুন একাউন্ট তৈরি করুন</CardTitle>
                 <CardDescription>
-                  Sign up to start shopping with exclusive deals
+                  এক্সক্লুসিভ ডিসকাউন্ট পেতে এখনই রেজিস্ট্রেশন করুন
                 </CardDescription>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signup-name">Full Name</Label>
+                    <Label htmlFor="signup-name">পুরো নাম</Label>
                     <Input 
                       id="signup-name" 
-                      placeholder="John Doe"
+                      placeholder="আপনার নাম"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+                    <Label htmlFor="signup-email">ইমেইল</Label>
                     <Input 
                       id="signup-email" 
                       type="email" 
@@ -79,7 +79,7 @@ const Auth = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
+                    <Label htmlFor="signup-password">পাসওয়ার্ড</Label>
                     <Input 
                       id="signup-password" 
                       type="password" 
@@ -90,7 +90,7 @@ const Auth = () => {
               </CardContent>
               <CardFooter>
                 <Button className="w-full" variant="hero">
-                  Create Account
+                  একাউন্ট তৈরি করুন
                 </Button>
               </CardFooter>
             </TabsContent>

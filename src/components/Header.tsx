@@ -25,9 +25,8 @@ export const Header = () => {
           {/* Search Bar */}
           <div className="hidden md:flex flex-1 max-w-2xl mx-8">
             <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
-                placeholder="Search for products..." 
+                placeholder="প্রোডাক্ট খুঁজুন..." 
                 className="pl-10 pr-4 h-10 w-full"
               />
             </div>
@@ -81,19 +80,19 @@ export const Header = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-48">
               <DropdownMenuItem asChild>
-                <Link to="/categories/baby">Baby Items</Link>
+                <Link to="/categories/baby">বেবি আইটেম</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/categories/women">Women</Link>
+                <Link to="/categories/women">নারী</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/categories/men">Men</Link>
+                <Link to="/categories/men">পুরুষ</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/categories/electronics">Electronics</Link>
+                <Link to="/categories/electronics">ইলেকট্রনিক্স</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/categories/trendy">Trending</Link>
+                <Link to="/categories/trendy">ট্রেন্ডি পণ্য</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

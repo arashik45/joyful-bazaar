@@ -7,11 +7,11 @@ const CategoryPage = () => {
   const { category } = useParams();
   
   const categoryTitles: Record<string, string> = {
-    baby: "Baby Items",
-    women: "Women's Fashion",
-    men: "Men's Fashion",
-    electronics: "Electronics & Gadgets",
-    trendy: "Trending Items",
+    baby: "বেবি আইটেম",
+    women: "নারী ফ্যাশন",
+    men: "পুরুষ ফ্যাশন",
+    electronics: "ইলেকট্রনিক্স ও গ্যাজেট",
+    trendy: "ট্রেন্ডি পণ্য",
   };
 
   const demoProducts = [
@@ -39,7 +39,7 @@ const CategoryPage = () => {
       
       <main className="flex-1 container mx-auto px-4 py-8">
         <h1 className="text-3xl md:text-4xl font-heading font-bold mb-8">
-          {categoryTitles[category || ""] || "All Products"}
+          {categoryTitles[category || ""] || "সব পণ্য"}
         </h1>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
