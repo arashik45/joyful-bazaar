@@ -219,15 +219,13 @@ const CategoryPage = () => {
       },
     ],
   };
-
+ 
   const [priceFilter, setPriceFilter] = useState<string>("all");
-
+ 
   const products: DemoProduct[] = productsByCategory[category || ""] ||
     Object.values(productsByCategory).flat();
-
+ 
   const filteredProducts = useMemo(() => {
-    if (priceFilter === "all") return products;
-
     return products.filter((product) => {
       if (priceFilter === "low") return product.price < 1000;
       if (priceFilter === "mid") return product.price >= 1000 && product.price <= 3000;

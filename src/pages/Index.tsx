@@ -8,6 +8,7 @@ import { ChevronRight, TrendingUp, Zap, Shield, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import heroBanner from "@/assets/hero-banner.jpg";
+import { homeProducts } from "@/data/products";
 
 const categories = [
   { id: "baby", name: "Baby Items", slug: "baby", color: "bg-pink-100 text-pink-700" },
@@ -71,12 +72,12 @@ const Index = () => {
 
   const filteredProducts = useMemo(
     () =>
-      demoProducts.filter((product) =>
+      homeProducts.filter((product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
       ),
     [searchTerm]
   );
-
+ 
   const recommendedProducts = filteredProducts.slice(0, 4);
 
   return (
@@ -254,7 +255,7 @@ const Index = () => {
             </Button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {(searchTerm ? filteredProducts : demoProducts).map((product) => (
+            {(searchTerm ? filteredProducts : homeProducts).map((product) => (
               <ProductCard key={product.id} {...product} />
             ))}
           </div>
