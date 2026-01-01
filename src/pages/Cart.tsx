@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,7 @@ const Cart = () => {
                 প্রিয় পণ্যগুলো কার্টে যোগ করুন
               </p>
               <Button variant="hero" asChild>
-                <a href="/">শপিং শুরু করুন</a>
+                <Link to="/">শপিং শুরু করুন</Link>
               </Button>
             </CardContent>
           </Card>
@@ -130,7 +131,7 @@ const Cart = () => {
                   <span>৳{totalPrice.toFixed(2)}</span>
                 </div>
                 <Button asChild variant="shop" className="w-full mt-2">
-                  <a href="/checkout">চেকআউটে যান</a>
+                  <Link to="/checkout">চেকআউটে যান</Link>
                 </Button>
                 <Button
                   variant="outline"
