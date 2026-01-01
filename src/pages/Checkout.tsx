@@ -5,6 +5,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/CartContext";
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const Checkout = () => {
   const { items, totalPrice, totalItems } = useCart();
@@ -12,6 +20,8 @@ const Checkout = () => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [insideDhaka, setInsideDhaka] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const navigate = useNavigate();
 
   const deliveryCharge = useMemo(() => (insideDhaka ? 80 : 130), [insideDhaka]);
   const grandTotal = useMemo(() => totalPrice + deliveryCharge, [totalPrice, deliveryCharge]);
@@ -22,6 +32,27 @@ const Checkout = () => {
 
       <main className="flex-1 container mx-auto px-4 py-8">
         <h1 className="text-3xl font-heading font-bold mb-6">চেকআউট</h1>
+
+        <AlertDialog open={successOpen} onOpenChange={setSuccessOpen}>
+          <AlertDialogContent className="max-w-sm text-center">
+            <AlertDialogHeader className="items-center space-y-3">
+              <AlertDialogTitle className="text-xl font-heading">অর্ডার সফলভাবে কনফার্ম হয়েছে!</AlertDialogTitle>
+              <AlertDialogDescription>
+                আপনার অর্ডার রিসিভ করা হয়েছে। এখনই অর্ডার কনফার্মেশন পেজে নিয়ে যাওয়া হবে।
+              </AlertDialogDescription>
+              <Button
+                variant="shop"
+                className="mt-2 w-full"
+                onClick={() => {
+                  setSuccessOpen(false);
+                  navigate("/order-success");
+                }}
+              >
+                অর্ডার কনফার্মেশন দেখুন
+              </Button>
+            </AlertDialogHeader>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left: Customer info */}
@@ -87,8 +118,15 @@ const Checkout = () => {
                 variant="shop"
                 className="w-full mt-4"
                 disabled={!name || !phone || !address || items.length === 0}
+                onClick={() => {
+                  setSuccessOpen(true);
+                  setTimeout(() => {
+                    setSuccessOpen(false);
+                    navigate("/order-success");
+                  }, 2000);
+                }}
               >
-                অর্ডার কনফার্ম করুন (ডেমো)
+                অর্ডার কনফার্ম করুন
               </Button>
             </CardContent>
           </Card>
