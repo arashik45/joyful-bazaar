@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, User, Search, Menu, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,15 @@ import { useCart } from "@/context/CartContext";
 
 export const Header = () => {
   const { totalItems } = useCart();
+  const [highlight, setHighlight] = useState(false);
+
+  useEffect(() => {
+    if (totalItems > 0) {
+      setHighlight(true);
+      const timer = setTimeout(() => setHighlight(false), 600);
+      return () => clearTimeout(timer);
+    }
+  }, [totalItems]);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border">
@@ -64,7 +74,7 @@ export const Header = () => {
             <Link to="/cart" className="flex items-center gap-1">
               <ShoppingCart className="h-5 w-5" />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-destructive text-destructive-foreground text-[11px] px-1 shadow-soft">
+                <span className={`absolute -top-1 -right-1 inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-destructive text-destructive-foreground text-[11px] px-1 shadow-soft ${highlight ? "pulse" : ""}`}>
                   {totalItems}
                 </span>
               )}
