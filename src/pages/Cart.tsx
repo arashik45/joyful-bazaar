@@ -129,8 +129,8 @@ const Cart = () => {
                   <span>মোট</span>
                   <span>৳{totalPrice.toFixed(2)}</span>
                 </div>
-                <Button variant="shop" className="w-full mt-2">
-                  চেকআউটে যান
+                <Button asChild variant="shop" className="w-full mt-2">
+                  <a href="/checkout">চেকআউটে যান</a>
                 </Button>
                 <Button
                   variant="outline"
