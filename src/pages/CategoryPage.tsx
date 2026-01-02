@@ -24,6 +24,7 @@ const CategoryPage = () => {
     "electronics-gadgets": "Electronics & Gadgets",
     "home-lifestyle": "Home & Lifestyle",
     "kitchen-accessories": "Kitchen Accessories",
+    trendy: "সব পণ্য",
   };
  
   const [priceFilter, setPriceFilter] = useState<string>("all");
@@ -36,7 +37,7 @@ const CategoryPage = () => {
       setLoading(true);
       let query = supabase.from("products").select("*");
 
-      if (category) {
+      if (category && category !== "trendy") {
         query = query.eq("category", category);
       }
 
