@@ -62,6 +62,7 @@ const Admin = () => {
     image4: "",
     stock_count: 0,
     description: "",
+    longDescription: "",
     discount: 0,
     metaText: "",
   });
@@ -134,7 +135,7 @@ const Admin = () => {
 
   const handleSaveProduct = async () => {
     if (!editingProduct) return;
-    const { id, name, price, description, category, image, stock_count, discount, seo_description } =
+    const { id, name, price, description, category, image, stock_count, discount, seo_description, long_description } =
       editingProduct as any;
 
     const { error } = await supabase
@@ -143,6 +144,7 @@ const Admin = () => {
         name,
         price,
         description,
+        long_description: long_description || "",
         category,
         image_url: image,
         stock_count: stock_count ?? 0,
@@ -172,6 +174,7 @@ const Admin = () => {
       image_url_4: newProduct.image4,
       stock_count: newProduct.stock_count,
       description: newProduct.description,
+      long_description: newProduct.longDescription,
       discount: newProduct.discount,
       seo_description: newProduct.metaText,
     });
@@ -192,6 +195,7 @@ const Admin = () => {
         image4: "",
         stock_count: 0,
         description: "",
+        longDescription: "",
         discount: 0,
         metaText: "",
       });
@@ -413,20 +417,28 @@ const Admin = () => {
                 />
               </div>
               <div className="flex flex-col gap-1 md:col-span-2">
-                <span className="text-sm font-medium">Product Description (ওয়েবসাইটে দেখা যাবে):</span>
-                <Textarea
-                  className="min-h-[160px] resize-y"
+                <span className="text-sm font-medium">Short Description (নামের নিচে ছোট লাইন):</span>
+                <Input
                   value={newProduct.description}
                   onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                  placeholder="যেমন: Lightweight running shoes with breathable mesh upper"
+                />
+              </div>
+              <div className="flex flex-col gap-1 md:col-span-2">
+                <span className="text-sm font-medium">Long Description (পণ্যের বিস্তারিত ট্যাবে):</span>
+                <Textarea
+                  className="min-h-[160px] resize-y"
+                  value={newProduct.longDescription}
+                  onChange={(e) => setNewProduct({ ...newProduct, longDescription: e.target.value })}
                   placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা (এখানে যা লিখবেন, নিচের পণ্যের বিস্তারিত ট্যাবে তাই দেখাবে)"
                 />
               </div>
               <div className="flex flex-col gap-1 md:col-span-2">
-                <span className="text-sm font-medium">Product Meta Text (নামের নিচে ছোট লাইন):</span>
+                <span className="text-sm font-medium">Product Meta Text (SEO এর জন্য):</span>
                 <Input
                   value={newProduct.metaText}
                   onChange={(e) => setNewProduct({ ...newProduct, metaText: e.target.value })}
-                  placeholder="যেমন: Lightweight running shoes with breathable mesh upper"
+                  placeholder="Search engine এ দেখাবে (optional)"
                 />
               </div>
               <div className="md:col-span-2 flex justify-end gap-2">
@@ -505,11 +517,28 @@ const Admin = () => {
                 />
               </div>
               <div className="flex flex-col gap-1 md:col-span-2">
-                <span className="text-sm font-medium">Product Meta Text (নামের নিচে ছোট লাইন):</span>
+                <span className="text-sm font-medium">Short Description (নামের নিচে ছোট লাইন):</span>
+                <Input
+                  value={editingProduct.description || ""}
+                  onChange={(e) => handleProductChange("description", e.target.value)}
+                  placeholder="যেমন: Lightweight running shoes with breathable mesh upper"
+                />
+              </div>
+              <div className="flex flex-col gap-1 md:col-span-2">
+                <span className="text-sm font-medium">Long Description (পণ্যের বিস্তারিত ট্যাবে):</span>
+                <Textarea
+                  className="min-h-[160px] resize-y"
+                  value={(editingProduct as any).long_description || ""}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, long_description: e.target.value } as any)}
+                  placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা"
+                />
+              </div>
+              <div className="flex flex-col gap-1 md:col-span-2">
+                <span className="text-sm font-medium">Product Meta Text (SEO এর জন্য):</span>
                 <Input
                   value={(editingProduct as any).seo_description || ""}
                   onChange={(e) => handleProductChange("seo_description", e.target.value)}
-                  placeholder="যেমন: Lightweight running shoes with breathable mesh upper"
+                  placeholder="Search engine এ দেখাবে (optional)"
                 />
               </div>
               <div className="md:col-span-2 flex justify-end gap-2">

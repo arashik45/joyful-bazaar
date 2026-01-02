@@ -58,6 +58,7 @@ export type Database = {
           image_url_2: string | null
           image_url_3: string | null
           image_url_4: string | null
+          long_description: string | null
           name: string
           price: number
           seo_description: string | null
@@ -74,6 +75,7 @@ export type Database = {
           image_url_2?: string | null
           image_url_3?: string | null
           image_url_4?: string | null
+          long_description?: string | null
           name: string
           price: number
           seo_description?: string | null
@@ -90,6 +92,7 @@ export type Database = {
           image_url_2?: string | null
           image_url_3?: string | null
           image_url_4?: string | null
+          long_description?: string | null
           name?: string
           price?: number
           seo_description?: string | null
