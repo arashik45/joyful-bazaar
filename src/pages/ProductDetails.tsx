@@ -354,14 +354,10 @@ const ProductDetails = () => {
             <TabsContent value="details" className="mt-4">
               <Card>
                 <CardContent className="p-5 text-sm leading-relaxed space-y-2">
-                  <p className="font-semibold text-foreground">{product.name} – এক মেশিনেই সব কাজ!</p>
-                  <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                    <li>হাই স্পিড মোটর – দ্রুত ও কার্যকর গ্রাইন্ডিং পারফরমেন্স।</li>
-                    <li>স্টেইনলেস স্টিল ব্লেড – দীর্ঘ সময় ব্যবহারযোগ্য ও টেকসই।</li>
-                    <li>কমপ্যাক্ট ডিজাইন – সহজে বহনযোগ্য ও কম জায়গা নেয়।</li>
-                    <li>ইজি টু ক্লিন – ব্যবহার শেষে অল্প সময়ে পরিষ্কার করা যায়।</li>
-                    <li>মাল্টি পারপাজ ইউজ – মসলা, সবজি, ডাল ইত্যাদি গ্রাইন্ড করার জন্য উপযুক্ত।</li>
-                  </ul>
+                  <p className="font-semibold text-foreground">{product.name}</p>
+                  <p className="text-muted-foreground whitespace-pre-line">
+                    {product.description || "এই প্রোডাক্ট সম্পর্কে বিস্তারিত শীঘ্রই যোগ করা হবে।"}
+                  </p>
                 </CardContent>
               </Card>
             </TabsContent>
