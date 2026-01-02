@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
 import ProductDetails from "./pages/ProductDetails";
+import Admin from "./pages/Admin";
 
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
@@ -26,19 +27,20 @@ const App = () => (
       <CartProvider>
         <WishlistProvider>
           <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/categories/:category" element={<CategoryPage />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/order-success" element={<OrderSuccess />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/product/:id" element={<ProductDetails />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/categories/:category" element={<CategoryPage />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/order-success" element={<OrderSuccess />} />
+              <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/product/:id" element={<ProductDetails />} />
+              <Route path="/admin" element={<Admin />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
         </WishlistProvider>
       </CartProvider>
     </TooltipProvider>

@@ -67,6 +67,7 @@ const ProductDetails = () => {
           image: data.image_url || "",
           category: data.category || "General",
           description: data.description || "",
+          stock_count: typeof data.stock_count === "number" ? data.stock_count : Number(data.stock_count ?? 0) || 0,
         };
         setProduct(mapped);
         setLoadError(null);
@@ -280,14 +281,24 @@ const ProductDetails = () => {
             {product.description || "এই প্রোডাক্ট সম্পর্কে বিস্তারিত শীঘ্রই যোগ করা হবে।"}
           </p>
 
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <span className="font-medium">
+              স্টকে: {product.stock_count ?? 0} পিস
+            </span>
+            {product.stock_count !== undefined && product.stock_count <= 0 && (
+              <span className="text-destructive font-semibold">স্টক শেষ</span>
+            )}
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <Button
               size="lg"
               className="flex-1"
               variant="shop"
               onClick={handleAddToCart}
+              disabled={(product.stock_count ?? 0) <= 0}
             >
-              <ShoppingCart className="h-4 w-4 mr-2" /> অর্ডার করুন
+              <ShoppingCart className="h-4 w-4 mr-2" /> {(product.stock_count ?? 0) <= 0 ? "স্টক নেই" : "অর্ডার করুন"}
             </Button>
             <Button
               variant="outline"
