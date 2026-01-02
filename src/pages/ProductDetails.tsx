@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, ShoppingCart, MessageCircle } from "lucide-react";
-import { allProducts, type Product } from "@/data/products";
+import { type Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { z } from "zod";
@@ -18,7 +18,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
+import { supabase } from "@/integrations/supabase/client";
 interface Review {
   id: number;
   name: string;
@@ -38,10 +38,48 @@ const ProductDetails = () => {
   const { addItem } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
-  const product: Product | undefined = useMemo(
-    () => allProducts.find((p) => p.id === id),
-    [id]
-  );
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchProduct = async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Error loading product", error);
+        setLoadError("প্রোডাক্ট লোড করতে সমস্যা হচ্ছে। পরে চেষ্টা করুন।");
+        setProduct(null);
+      } else if (data) {
+        const mapped: Product = {
+          id: data.id,
+          name: data.name,
+          price: Number(data.price ?? 0),
+          image: data.image_url || "",
+          category: data.category || "General",
+          description: data.description || "",
+        };
+        setProduct(mapped);
+        setLoadError(null);
+      } else {
+        setProduct(null);
+        setLoadError(null);
+      }
+
+      setLoading(false);
+    };
+
+    fetchProduct();
+  }, [id]);
 
   const [reviews, setReviews] = useState<Review[]>([
     {
@@ -61,12 +99,24 @@ const ProductDetails = () => {
   const [form, setForm] = useState({ name: "", rating: 5, comment: "" });
   const [errors, setErrors] = useState<{ name?: string; comment?: string }>({});
 
-  if (!product) {
+  if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1 flex items-center justify-center">
-          <p className="text-muted-foreground">প্রোডাক্টটি পাওয়া যায়নি।</p>
+          <p className="text-muted-foreground">প্রোডাক্ট লোড হচ্ছে...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!product || loadError) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <p className="text-muted-foreground">প্রোডাক্টটি পাওয়া যায়নি বা লোড করতে সমস্যা হয়েছে।</p>
         </main>
         <Footer />
       </div>

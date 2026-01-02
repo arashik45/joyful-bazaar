@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ProductCard } from "@/components/ProductCard";
@@ -8,8 +8,8 @@ import { ChevronRight, TrendingUp, Zap, Shield, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import heroBanner from "@/assets/hero-banner.jpg";
-import { homeProducts } from "@/data/products";
-
+import { type Product } from "@/data/products";
+import { supabase } from "@/integrations/supabase/client";
 const categories = [
   { id: "baby", name: "Baby Items", slug: "baby", color: "bg-pink-100 text-pink-700" },
   { id: "women", name: "Women", slug: "women", color: "bg-purple-100 text-purple-700" },
@@ -69,13 +69,47 @@ const demoProducts = [
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error loading products", error);
+        setError("পণ্য লোড করতে সমস্যা হচ্ছে। পরে চেষ্টা করুন।");
+        setProducts([]);
+      } else {
+        const mapped: Product[] = (data || []).map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          price: Number(p.price ?? 0),
+          image: p.image_url || heroBanner,
+          category: p.category || "General",
+          description: p.description || "",
+        }));
+        setProducts(mapped);
+        setError(null);
+      }
+
+      setLoading(false);
+    };
+
+    fetchProducts();
+  }, []);
 
   const filteredProducts = useMemo(
     () =>
-      homeProducts.filter((product) =>
+      products.filter((product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
       ),
-    [searchTerm]
+    [products, searchTerm]
   );
  
   const recommendedProducts = filteredProducts.slice(0, 4);
@@ -218,16 +252,25 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {recommendedProducts.map((product, idx) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: idx * 0.1 }}
-              >
-                <ProductCard {...product} />
-              </motion.div>
-            ))}
+            {loading && (
+              <p className="text-sm text-muted-foreground col-span-full">
+                পণ্য লোড হচ্ছে...
+              </p>
+            )}
+            {error && !loading && (
+              <p className="text-sm text-destructive col-span-full">{error}</p>
+            )}
+            {!loading && !error &&
+              recommendedProducts.map((product, idx) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: idx * 0.1 }}
+                >
+                  <ProductCard {...product} />
+                </motion.div>
+              ))}
           </div>
         </div>
       </section>
@@ -256,7 +299,7 @@ const Index = () => {
             </Button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {(searchTerm ? filteredProducts : homeProducts).map((product) => (
+            {(searchTerm ? filteredProducts : products).map((product) => (
               <ProductCard key={product.id} {...product} />
             ))}
           </div>
