@@ -8,6 +8,7 @@ export interface Product {
   rating?: number;
   description?: string;
   stock_count?: number;
+  seo_description?: string;
 }
 
 export const homeProducts: Product[] = [

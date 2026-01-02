@@ -122,11 +122,15 @@ export const ProductCard = ({
               <span className="text-sm text-muted-foreground">{rating} / ৫</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-primary">৳{discountedPrice.toFixed(2)}</span>
-              {discount && (
-                <span className="text-sm text-muted-foreground line-through">
-                  ৳{price.toFixed(2)}
-                </span>
+              {discount ? (
+                <>
+                  <span className="text-lg font-bold text-primary">৳{discountedPrice.toFixed(2)}</span>
+                  <span className="text-sm text-muted-foreground line-through">
+                    ৳{price.toFixed(2)}
+                  </span>
+                </>
+              ) : (
+                <span className="text-lg font-bold text-primary">৳{price.toFixed(2)}</span>
               )}
             </div>
           </CardContent>

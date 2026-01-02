@@ -52,10 +52,12 @@ export type Database = {
           category: string | null
           created_at: string
           description: string | null
+          discount: number | null
           id: string
           image_url: string | null
           name: string
           price: number
+          seo_description: string | null
           stock_count: number
           updated_at: string
         }
@@ -63,10 +65,12 @@ export type Database = {
           category?: string | null
           created_at?: string
           description?: string | null
+          discount?: number | null
           id?: string
           image_url?: string | null
           name: string
           price: number
+          seo_description?: string | null
           stock_count?: number
           updated_at?: string
         }
@@ -74,10 +78,12 @@ export type Database = {
           category?: string | null
           created_at?: string
           description?: string | null
+          discount?: number | null
           id?: string
           image_url?: string | null
           name?: string
           price?: number
+          seo_description?: string | null
           stock_count?: number
           updated_at?: string
         }
