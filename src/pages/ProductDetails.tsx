@@ -68,6 +68,7 @@ const ProductDetails = () => {
           category: data.category || "General",
           description: data.description || "",
           stock_count: typeof data.stock_count === "number" ? data.stock_count : Number(data.stock_count ?? 0) || 0,
+          discount: Number(data.discount ?? 0),
         };
         setProduct(mapped);
         setLoadError(null);
@@ -259,13 +260,19 @@ const ProductDetails = () => {
           </div>
 
           <div className="space-y-1">
-            <p className="text-3xl font-extrabold text-primary">
-              ৳{discountedPrice.toFixed(0)}
-            </p>
-            {product.discount && (
-              <p className="text-sm text-muted-foreground">
-                পূর্বের দাম <span className="line-through">৳{product.price}</span> — {" "}
-                <span className="text-destructive font-semibold">-{product.discount}% ছাড়</span>
+            {product.discount && product.discount > 0 ? (
+              <>
+                <p className="text-3xl font-extrabold text-primary">
+                  ৳{discountedPrice.toFixed(0)}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  পূর্বের দাম <span className="line-through">৳{product.price}</span> — {" "}
+                  <span className="text-destructive font-semibold">-{product.discount}% ছাড়</span>
+                </p>
+              </>
+            ) : (
+              <p className="text-3xl font-extrabold text-primary">
+                ৳{product.price.toFixed(0)}
               </p>
             )}
           </div>

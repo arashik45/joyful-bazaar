@@ -36,6 +36,17 @@ const Admin = () => {
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isAddingProduct, setIsAddingProduct] = useState(false);
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    price: 0,
+    category: "",
+    image: "",
+    stock_count: 0,
+    description: "",
+    discount: 0,
+    seo_description: "",
+  });
 
   useEffect(() => {
     if (!unlocked) return;
@@ -69,6 +80,8 @@ const Admin = () => {
         category: p.category || "General",
         description: p.description || "",
         stock_count: typeof p.stock_count === "number" ? p.stock_count : Number(p.stock_count ?? 0) || 0,
+        discount: Number(p.discount ?? 0),
+        seo_description: p.seo_description || "",
       }));
       setProducts(mapped);
     }
@@ -103,7 +116,7 @@ const Admin = () => {
 
   const handleSaveProduct = async () => {
     if (!editingProduct) return;
-    const { id, name, price, description, category, image, stock_count } = editingProduct as any;
+    const { id, name, price, description, category, image, stock_count, discount, seo_description } = editingProduct as any;
 
     const { error } = await supabase
       .from("products")
@@ -114,6 +127,8 @@ const Admin = () => {
         category,
         image_url: image,
         stock_count: stock_count ?? 0,
+        discount: discount ?? 0,
+        seo_description: seo_description || "",
       })
       .eq("id", id);
 
@@ -123,6 +138,38 @@ const Admin = () => {
     } else {
       toast({ title: "পণ্য আপডেট হয়েছে" });
       setEditingProduct(null);
+      fetchProducts();
+    }
+  };
+
+  const handleAddProduct = async () => {
+    const { error } = await supabase.from("products").insert({
+      name: newProduct.name,
+      price: newProduct.price,
+      category: newProduct.category,
+      image_url: newProduct.image,
+      stock_count: newProduct.stock_count,
+      description: newProduct.description,
+      discount: newProduct.discount,
+      seo_description: newProduct.seo_description,
+    });
+
+    if (error) {
+      console.error(error);
+      toast({ title: "পণ্য তৈরি ব্যর্থ", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "নতুন পণ্য যোগ হয়েছে" });
+      setIsAddingProduct(false);
+      setNewProduct({
+        name: "",
+        price: 0,
+        category: "",
+        image: "",
+        stock_count: 0,
+        description: "",
+        discount: 0,
+        seo_description: "",
+      });
       fetchProducts();
     }
   };
@@ -197,8 +244,11 @@ const Admin = () => {
 
           <TabsContent value="products" className="mt-4 space-y-4">
             <Card>
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>পণ্য তালিকা</CardTitle>
+                <Button variant="hero" onClick={() => setIsAddingProduct(true)}>
+                  নতুন পণ্য যোগ করুন
+                </Button>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -206,6 +256,7 @@ const Admin = () => {
                     <TableRow>
                       <TableHead>নাম</TableHead>
                       <TableHead>দাম</TableHead>
+                      <TableHead>ডিসকাউন্ট</TableHead>
                       <TableHead>স্টক</TableHead>
                       <TableHead>ক্যাটাগরি</TableHead>
                       <TableHead>অ্যাকশন</TableHead>
@@ -214,18 +265,19 @@ const Admin = () => {
                   <TableBody>
                     {loadingProducts && (
                       <TableRow>
-                        <TableCell colSpan={5}>পণ্য লোড হচ্ছে...</TableCell>
+                        <TableCell colSpan={6}>পণ্য লোড হচ্ছে...</TableCell>
                       </TableRow>
                     )}
                     {!loadingProducts && products.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={5}>কোন পণ্য পাওয়া যায়নি।</TableCell>
+                        <TableCell colSpan={6}>কোন পণ্য পাওয়া যায়নি।</TableCell>
                       </TableRow>
                     )}
                     {products.map((p) => (
                       <TableRow key={p.id}>
                         <TableCell>{p.name}</TableCell>
                         <TableCell>৳{p.price}</TableCell>
+                        <TableCell>{p.discount ?? 0}%</TableCell>
                         <TableCell>{p.stock_count ?? 0}</TableCell>
                         <TableCell>{p.category}</TableCell>
                         <TableCell className="space-x-2">
@@ -243,6 +295,69 @@ const Admin = () => {
                 </Table>
               </CardContent>
             </Card>
+
+            {isAddingProduct && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>নতুন পণ্য যোগ করুন</CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-3 md:grid-cols-2">
+                  <Input
+                    value={newProduct.name}
+                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                    placeholder="পণ্যের নাম"
+                  />
+                  <Input
+                    type="number"
+                    value={newProduct.price}
+                    onChange={(e) => setNewProduct({ ...newProduct, price: Number(e.target.value) || 0 })}
+                    placeholder="দাম"
+                  />
+                  <Input
+                    value={newProduct.category}
+                    onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                    placeholder="ক্যাটাগরি"
+                  />
+                  <Input
+                    value={newProduct.image}
+                    onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
+                    placeholder="ইমেজ URL"
+                  />
+                  <Input
+                    type="number"
+                    value={newProduct.stock_count}
+                    onChange={(e) => setNewProduct({ ...newProduct, stock_count: Number(e.target.value) || 0 })}
+                    placeholder="স্টক পরিমাণ"
+                  />
+                  <Input
+                    type="number"
+                    value={newProduct.discount}
+                    onChange={(e) => setNewProduct({ ...newProduct, discount: Number(e.target.value) || 0 })}
+                    placeholder="ডিসকাউন্ট (০-১০০%)"
+                  />
+                  <Input
+                    value={newProduct.description}
+                    onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                    placeholder="সংক্ষিপ্ত বিবরণ"
+                    className="md:col-span-2"
+                  />
+                  <Input
+                    value={newProduct.seo_description}
+                    onChange={(e) => setNewProduct({ ...newProduct, seo_description: e.target.value })}
+                    placeholder="SEO বিবরণ (সার্চ ইঞ্জিনের জন্য)"
+                    className="md:col-span-2"
+                  />
+                  <div className="md:col-span-2 flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => setIsAddingProduct(false)}>
+                      ক্যানসেল
+                    </Button>
+                    <Button variant="hero" onClick={handleAddProduct}>
+                      পণ্য যোগ করুন
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {editingProduct && (
               <Card>
@@ -278,9 +393,22 @@ const Admin = () => {
                     placeholder="স্টক পরিমাণ"
                   />
                   <Input
+                    type="number"
+                    value={(editingProduct as any).discount ?? 0}
+                    onChange={(e) => handleProductChange("discount", Number(e.target.value) || 0)}
+                    placeholder="ডিসকাউন্ট (০-১০০%)"
+                  />
+                  <Input
                     value={editingProduct.description || ""}
                     onChange={(e) => handleProductChange("description", e.target.value)}
-                    placeholder="ডেস্ক্রিপশন"
+                    placeholder="সংক্ষিপ্ত বিবরণ"
+                    className="md:col-span-2"
+                  />
+                  <Input
+                    value={(editingProduct as any).seo_description || ""}
+                    onChange={(e) => handleProductChange("seo_description", e.target.value)}
+                    placeholder="SEO বিবরণ (সার্চ ইঞ্জিনের জন্য)"
+                    className="md:col-span-2"
                   />
                   <div className="md:col-span-2 flex justify-end gap-2">
                     <Button variant="outline" onClick={() => setEditingProduct(null)}>
