@@ -74,6 +74,7 @@ const ProductDetails = () => {
           stock_count:
             typeof data.stock_count === "number" ? data.stock_count : Number(data.stock_count ?? 0) || 0,
           discount: Number(data.discount ?? 0),
+          seo_description: (data as any).seo_description || "",
         };
         (mapped as any).images = images;
         setProduct(mapped);
@@ -292,9 +293,9 @@ const ProductDetails = () => {
             <span>{reviews.length} টি রিভিউ</span>
           </div>
 
-                  <p className="text-sm text-muted-foreground whitespace-pre-line">
-                    {product.description || "এই প্রোডাক্ট সম্পর্কে বিস্তারিত শীঘ্রই যোগ করা হবে।"}
-                  </p>
+          <p className="text-sm text-muted-foreground whitespace-pre-line">
+            {product.seo_description || product.description || "এই প্রোডাক্ট সম্পর্কে বিস্তারিত শীঘ্রই যোগ করা হবে।"}
+          </p>
 
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <span className="font-medium">
