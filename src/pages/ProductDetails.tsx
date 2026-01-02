@@ -75,6 +75,7 @@ const ProductDetails = () => {
             typeof data.stock_count === "number" ? data.stock_count : Number(data.stock_count ?? 0) || 0,
           discount: Number(data.discount ?? 0),
           seo_description: (data as any).seo_description || "",
+          long_description: (data as any).long_description || "",
         };
         (mapped as any).images = images;
         setProduct(mapped);
@@ -294,7 +295,7 @@ const ProductDetails = () => {
           </div>
 
           <p className="text-sm text-muted-foreground whitespace-pre-line">
-            {product.seo_description || product.description || "এই প্রোডাক্ট সম্পর্কে বিস্তারিত শীঘ্রই যোগ করা হবে।"}
+            {product.description || "এই প্রোডাক্ট সম্পর্কে বিস্তারিত শীঘ্রই যোগ করা হবে।"}
           </p>
 
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -357,7 +358,7 @@ const ProductDetails = () => {
                 <CardContent className="p-5 text-sm leading-relaxed space-y-2">
                   <p className="font-semibold text-foreground">{product.name}</p>
                   <p className="text-muted-foreground whitespace-pre-line">
-                    {product.description || "এই প্রোডাক্ট সম্পর্কে বিস্তারিত শীঘ্রই যোগ করা হবে।"}
+                    {product.long_description || product.description || "এই প্রোডাক্ট সম্পর্কে বিস্তারিত শীঘ্রই যোগ করা হবে।"}
                   </p>
                 </CardContent>
               </Card>

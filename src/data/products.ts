@@ -9,6 +9,7 @@ export interface Product {
   description?: string;
   stock_count?: number;
   seo_description?: string;
+  long_description?: string;
   images?: string[];
 }
 
