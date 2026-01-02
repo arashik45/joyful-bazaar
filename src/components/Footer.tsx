@@ -16,7 +16,10 @@ export const Footer = () => {
                 className="w-8 h-8 rounded-lg shadow-soft bg-background/80"
                 loading="lazy"
               />
-              <span className="text-xl font-heading font-bold">পন্য Hub</span>
+              <span className="text-xl font-heading font-bold">
+                <span className="text-accent">পন্য</span>{" "}
+                <span className="text-secondary">Hub</span>
+              </span>
             </Link>
             <p className="text-sm text-muted-foreground mb-4">
               সারা বাংলাদেশের নির্ভরযোগ্য অনলাইন শপিং প্ল্যাটফর্ম। আসল পণ্য, সেরা দাম ও দ্রুত ডেলিভারি।

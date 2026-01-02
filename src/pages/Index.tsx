@@ -117,7 +117,8 @@ const Index = () => {
                 আপনার প্রিয় অনলাইন শপ
               </Badge>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-extrabold leading-tight mb-2">
-                পন্য Hub
+                <span className="text-accent">পন্য</span>{" "}
+                <span className="text-secondary">Hub</span>
               </h1>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-extrabold mb-3 drop-shadow">
                 Online Shop

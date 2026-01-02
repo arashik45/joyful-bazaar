@@ -55,7 +55,8 @@ export const Header = ({ searchValue = "", onSearchChange }: HeaderProps) => {
           />
           <div className="leading-tight hidden xs:block">
             <span className="block text-lg sm:text-xl font-heading font-extrabold tracking-tight">
-              পন্য Hub
+              <span className="text-accent">পন্য</span>{" "}
+              <span className="text-secondary">Hub</span>
             </span>
             <span className="block text-[11px] text-muted-foreground">
               Bangladeshi Online Shop
