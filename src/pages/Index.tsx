@@ -84,23 +84,23 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Header searchValue={searchTerm} onSearchChange={setSearchTerm} />
       
-      {/* Hero Section styled similar to reference */}
-      <section className="relative py-8 sm:py-10 bg-background">
+      {/* Hero Section aligned with Ponno Hub branding */}
+      <section className="relative py-8 sm:py-10 gradient-hero">
         <div className="container mx-auto px-4">
-          <div className="rounded-3xl bg-primary/90 shadow-medium overflow-hidden flex flex-col md:flex-row items-stretch gap-0">
+          <div className="rounded-3xl bg-background/80 shadow-strong overflow-hidden flex flex-col md:flex-row items-stretch gap-0 backdrop-blur">
             {/* Left image */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="md:w-1/2 bg-primary/80 flex items-center justify-center p-6 sm:p-10"
+              className="md:w-1/2 bg-gradient-to-br from-primary/90 via-secondary/90 to-accent/90 flex items-center justify-center p-6 sm:p-10"
             >
               <div className="relative max-w-sm w-full animate-float">
                 <div className="absolute -left-6 -top-6 w-14 h-14 rounded-full bg-background/40" />
-                <div className="absolute -right-4 -bottom-6 w-10 h-10 rounded-full bg-secondary/60" />
+                <div className="absolute -right-4 -bottom-6 w-10 h-10 rounded-full bg-accent/70" />
                 <img
                   src={heroBanner}
-                  alt="অনলাইন শপ ব্যানার"
+                  alt="পন্য Hub অনলাইন শপ ব্যানার"
                   className="relative rounded-2xl w-full h-auto shadow-strong border border-border/40 bg-background"
                 />
               </div>
@@ -111,13 +111,13 @@ const Index = () => {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="md:w-1/2 bg-primary px-6 sm:px-10 py-8 sm:py-10 flex flex-col justify-center text-primary-foreground"
+              className="md:w-1/2 bg-background/90 px-6 sm:px-10 py-8 sm:py-10 flex flex-col justify-center text-foreground"
             >
               <Badge className="mb-3 bg-background text-foreground border-0 w-max px-3 py-1 text-[11px] sm:text-xs">
                 আপনার প্রিয় অনলাইন শপ
               </Badge>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-extrabold leading-tight mb-2">
-                আমার শপ
+                পন্য Hub
               </h1>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-extrabold mb-3 drop-shadow">
                 Online Shop
