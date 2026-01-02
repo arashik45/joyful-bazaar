@@ -36,6 +36,7 @@ const Admin = () => {
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isAddingProduct, setIsAddingProduct] = useState(false);
+  const [activeSection, setActiveSection] = useState<"products" | "orders" | "customers">("products");
   const CATEGORY_OPTIONS = [
     "Men’s Fashion",
     "Women’s Fashion",
@@ -250,108 +251,401 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-muted/40">
-      <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-heading font-bold">অ্যাডমিন ড্যাশবোর্ড</h1>
-          <Button variant="outline" onClick={() => navigate("/")}>
-            হোমে ফিরে যান
+      <main className="max-w-6xl mx-auto px-4 py-8 flex gap-6">
+        {/* Sidebar */}
+        <aside className="w-56 bg-card border border-border rounded-xl shadow-soft p-4 flex flex-col gap-2">
+          <h2 className="text-sm font-semibold text-muted-foreground mb-2">Admin Navigation</h2>
+          <Button
+            variant={activeSection === "products" ? "hero" : "outline"}
+            className="justify-start"
+            onClick={() => setActiveSection("products")}
+          >
+            Products
           </Button>
-        </div>
+          <Button
+            variant={activeSection === "orders" ? "hero" : "outline"}
+            className="justify-start"
+            onClick={() => setActiveSection("orders")}
+          >
+            Orders
+          </Button>
+          <Button
+            variant={activeSection === "customers" ? "hero" : "outline"}
+            className="justify-start"
+            onClick={() => setActiveSection("customers")}
+          >
+            Customers
+          </Button>
+          <div className="mt-auto pt-4 border-t border-border/60">
+            <Button variant="outline" size="sm" className="w-full" onClick={() => navigate("/")}>
+              হোমে ফিরে যান
+            </Button>
+          </div>
+        </aside>
 
-        <Tabs defaultValue="products" className="w-full">
-          <TabsList>
-            <TabsTrigger value="products">পণ্য ম্যানেজমেন্ট</TabsTrigger>
-            <TabsTrigger value="orders">অর্ডার ম্যানেজমেন্ট</TabsTrigger>
-          </TabsList>
+        {/* Main content */}
+        <section className="flex-1 space-y-6">
+          <h1 className="text-2xl font-heading font-bold">
+            {activeSection === "products" && "পণ্য ম্যানেজমেন্ট"}
+            {activeSection === "orders" && "অর্ডার ম্যানেজমেন্ট"}
+            {activeSection === "customers" && "কাস্টমারস"}
+          </h1>
 
-          <TabsContent value="products" className="mt-4 space-y-4">
-            <Card className="shadow-soft">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>পণ্য তালিকা</CardTitle>
-                <Button variant="hero" onClick={() => setIsAddingProduct(true)}>
-                  নতুন পণ্য যোগ করুন
-                </Button>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>নাম</TableHead>
-                      <TableHead>দাম</TableHead>
-                      <TableHead>ডিসকাউন্ট</TableHead>
-                      <TableHead>স্টক</TableHead>
-                      <TableHead>ক্যাটাগরি</TableHead>
-                      <TableHead>অ্যাকশন</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {loadingProducts && (
-                      <TableRow>
-                        <TableCell colSpan={6}>পণ্য লোড হচ্ছে...</TableCell>
-                      </TableRow>
-                    )}
-                    {!loadingProducts && products.length === 0 && (
-                      <TableRow>
-                        <TableCell colSpan={6}>কোন পণ্য পাওয়া যায়নি।</TableCell>
-                      </TableRow>
-                    )}
-                    {products.map((p) => (
-                      <TableRow key={p.id}>
-                        <TableCell>{p.name}</TableCell>
-                        <TableCell>৳{p.price}</TableCell>
-                        <TableCell>{p.discount ?? 0}%</TableCell>
-                        <TableCell>{p.stock_count ?? 0}</TableCell>
-                        <TableCell>{p.category}</TableCell>
-                        <TableCell className="space-x-2">
-                          <Button size="sm" variant="outline" onClick={() => setEditingProduct(p)}>
-                            এডিট
-                          </Button>
-                          <Button size="sm" variant="destructive" onClick={() => handleDeleteProduct(p.id)}>
-                            ডিলিট
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                  <TableCaption>মোট {products.length} টি পণ্য</TableCaption>
-                </Table>
-              </CardContent>
-            </Card>
-
-            {isAddingProduct && (
+          {activeSection === "products" && (
+            <>
               <Card className="shadow-soft">
-                <CardHeader>
-                  <CardTitle>নতুন পণ্য যোগ করুন</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>পণ্য তালিকা</CardTitle>
+                  <Button variant="hero" onClick={() => setIsAddingProduct(true)}>
+                    নতুন পণ্য যোগ করুন
+                  </Button>
                 </CardHeader>
-                <CardContent className="grid gap-4 md:grid-cols-2">
-                  {/* ... keep existing add-product form fields ... */}
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>নাম</TableHead>
+                        <TableHead>দাম</TableHead>
+                        <TableHead>ডিসকাউন্ট</TableHead>
+                        <TableHead>স্টক</TableHead>
+                        <TableHead>ক্যাটাগরি</TableHead>
+                        <TableHead>অ্যাকশন</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {loadingProducts && (
+                        <TableRow>
+                          <TableCell colSpan={6}>পণ্য লোড হচ্ছে...</TableCell>
+                        </TableRow>
+                      )}
+                      {!loadingProducts && products.length === 0 && (
+                        <TableRow>
+                          <TableCell colSpan={6}>কোন পণ্য পাওয়া যায়নি।</TableCell>
+                        </TableRow>
+                      )}
+                      {products.map((p) => (
+                        <TableRow key={p.id}>
+                          <TableCell>{p.name}</TableCell>
+                          <TableCell>৳{p.price}</TableCell>
+                          <TableCell>{p.discount ?? 0}%</TableCell>
+                          <TableCell>{p.stock_count ?? 0}</TableCell>
+                          <TableCell>{p.category}</TableCell>
+                          <TableCell className="space-x-2">
+                            <Button size="sm" variant="outline" onClick={() => setEditingProduct(p)}>
+                              এডিট
+                            </Button>
+                            <Button size="sm" variant="destructive" onClick={() => handleDeleteProduct(p.id)}>
+                              ডিলিট
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                    <TableCaption>মোট {products.length} টি পণ্য</TableCaption>
+                  </Table>
                 </CardContent>
               </Card>
-            )}
 
-            {editingProduct && (
-              <Card className="shadow-soft">
-                <CardHeader>
-                  <CardTitle>পণ্য আপডেট করুন</CardTitle>
-                </CardHeader>
-                <CardContent className="grid gap-4 md:grid-cols-2">
-                  {/* ... keep existing edit-product form fields ... */}
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
+              {isAddingProduct && (
+                <Card className="shadow-soft">
+                  <CardHeader>
+                    <CardTitle>নতুন পণ্য যোগ করুন</CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid gap-4 md:grid-cols-2">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Product Name:</span>
+                      <Input
+                        value={newProduct.name}
+                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                        placeholder="পণ্যের নাম"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Price:</span>
+                      <Input
+                        type="number"
+                        value={newProduct.price}
+                        onChange={(e) => setNewProduct({ ...newProduct, price: Number(e.target.value) || 0 })}
+                        placeholder="দাম"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Category:</span>
+                      <select
+                        className="border border-border rounded-md bg-background px-3 py-2 text-sm"
+                        value={newProduct.category}
+                        onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                      >
+                        {CATEGORY_OPTIONS.map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Main Image URL (1):</span>
+                      <Input
+                        value={newProduct.image1}
+                        onChange={(e) => setNewProduct({ ...newProduct, image1: e.target.value })}
+                        placeholder="প্রধান ইমেজের URL"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Image URL (2):</span>
+                      <Input
+                        value={newProduct.image2}
+                        onChange={(e) => setNewProduct({ ...newProduct, image2: e.target.value })}
+                        placeholder="২ নম্বর ইমেজের URL (ঐচ্ছিক)"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Image URL (3):</span>
+                      <Input
+                        value={newProduct.image3}
+                        onChange={(e) => setNewProduct({ ...newProduct, image3: e.target.value })}
+                        placeholder="৩ নম্বর ইমেজের URL (ঐচ্ছিক)"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Image URL (4):</span>
+                      <Input
+                        value={newProduct.image4}
+                        onChange={(e) => setNewProduct({ ...newProduct, image4: e.target.value })}
+                        placeholder="৪ নম্বর ইমেজের URL (ঐচ্ছিক)"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Stock Count:</span>
+                      <Input
+                        type="number"
+                        value={newProduct.stock_count}
+                        onChange={(e) =>
+                          setNewProduct({ ...newProduct, stock_count: Number(e.target.value) || 0 })
+                        }
+                        placeholder="স্টক পরিমাণ"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Discount (%):</span>
+                      <Input
+                        type="number"
+                        value={newProduct.discount}
+                        onChange={(e) =>
+                          setNewProduct({ ...newProduct, discount: Number(e.target.value) || 0 })
+                        }
+                        placeholder="ডিসকাউন্ট (০-১০০%)"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1 md:col-span-2">
+                      <span className="text-sm font-medium">Short Description (নামের নিচে ছোট লাইন):</span>
+                      <Input
+                        value={newProduct.description}
+                        onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                        placeholder="যেমন: Lightweight running shoes with breathable mesh upper"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1 md:col-span-2">
+                      <span className="text-sm font-medium">Long Description (পণ্যের বিস্তারিত ট্যাবে):</span>
+                      <Textarea
+                        className="min-h-[160px] resize-y"
+                        value={newProduct.longDescription}
+                        onChange={(e) => setNewProduct({ ...newProduct, longDescription: e.target.value })}
+                        placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা (এখানে যা লিখবেন, নিচের পণ্যের বিস্তারিত ট্যাবে তাই দেখাবে)"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1 md:col-span-2">
+                      <span className="text-sm font-medium">Product Meta Text (SEO এর জন্য):</span>
+                      <Input
+                        value={newProduct.metaText}
+                        onChange={(e) => setNewProduct({ ...newProduct, metaText: e.target.value })}
+                        placeholder="Search engine এ দেখাবে (optional)"
+                      />
+                    </div>
+                    <div className="md:col-span-2 flex justify-end gap-2">
+                      <Button variant="outline" onClick={() => setIsAddingProduct(false)}>
+                        ক্যানসেল
+                      </Button>
+                      <Button variant="hero" onClick={handleAddProduct}>
+                        পণ্য যোগ করুন
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
-          <TabsContent value="orders" className="mt-4">
+              {editingProduct && (
+                <Card className="shadow-soft">
+                  <CardHeader>
+                    <CardTitle>পণ্য আপডেট করুন</CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid gap-4 md:grid-cols-2">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Product Name:</span>
+                      <Input
+                        value={editingProduct.name}
+                        onChange={(e) => handleProductChange("name", e.target.value)}
+                        placeholder="পণ্যের নাম"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Price:</span>
+                      <Input
+                        type="number"
+                        value={editingProduct.price}
+                        onChange={(e) => handleProductChange("price", Number(e.target.value) || 0)}
+                        placeholder="দাম"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Category:</span>
+                      <select
+                        className="border border-border rounded-md bg-background px-3 py-2 text-sm"
+                        value={editingProduct.category}
+                        onChange={(e) => handleProductChange("category", e.target.value)}
+                      >
+                        {CATEGORY_OPTIONS.map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Image URL:</span>
+                      <Input
+                        value={editingProduct.image}
+                        onChange={(e) => handleProductChange("image", e.target.value)}
+                        placeholder="ইমেজ URL"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Stock Count:</span>
+                      <Input
+                        type="number"
+                        value={editingProduct.stock_count ?? 0}
+                        onChange={(e) => handleProductChange("stock_count", Number(e.target.value) || 0)}
+                        placeholder="স্টক পরিমাণ"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Discount (%):</span>
+                      <Input
+                        type="number"
+                        value={(editingProduct as any).discount ?? 0}
+                        onChange={(e) => handleProductChange("discount", Number(e.target.value) || 0)}
+                        placeholder="ডিসকাউন্ট (০-১০০%)"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1 md:col-span-2">
+                      <span className="text-sm font-medium">Short Description (নামের নিচে ছোট লাইন):</span>
+                      <Input
+                        value={editingProduct.description || ""}
+                        onChange={(e) => handleProductChange("description", e.target.value)}
+                        placeholder="যেমন: Lightweight running shoes with breathable mesh upper"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1 md:col-span-2">
+                      <span className="text-sm font-medium">Long Description (পণ্যের বিস্তারিত ট্যাবে):</span>
+                      <Textarea
+                        className="min-h-[160px] resize-y"
+                        value={(editingProduct as any).long_description || ""}
+                        onChange={(e) =>
+                          setEditingProduct({ ...editingProduct, long_description: e.target.value } as any)
+                        }
+                        placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1 md:col-span-2">
+                      <span className="text-sm font-medium">Product Meta Text (SEO এর জন্য):</span>
+                      <Input
+                        value={(editingProduct as any).seo_description || ""}
+                        onChange={(e) => handleProductChange("seo_description", e.target.value)}
+                        placeholder="Search engine এ দেখাবে (optional)"
+                      />
+                    </div>
+                    <div className="md:col-span-2 flex justify-end gap-2">
+                      <Button variant="outline" onClick={() => setEditingProduct(null)}>
+                        ক্যানসেল
+                      </Button>
+                      <Button variant="hero" onClick={handleSaveProduct}>
+                        সেভ করুন
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          )}
+
+          {activeSection === "orders" && (
             <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle>অর্ডার তালিকা</CardTitle>
               </CardHeader>
               <CardContent>
-                {/* ... keep existing orders table ... */}
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>কাস্টমার</TableHead>
+                      <TableHead>ঠিকানা</TableHead>
+                      <TableHead>অর্ডার আইটেম</TableHead>
+                      <TableHead>টোটাল</TableHead>
+                      <TableHead>স্ট্যাটাস</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {loadingOrders && (
+                      <TableRow>
+                        <TableCell colSpan={5}>অর্ডার লোড হচ্ছে...</TableCell>
+                      </TableRow>
+                    )}
+                    {!loadingOrders && orders.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={5}>কোন অর্ডার পাওয়া যায়নি।</TableCell>
+                      </TableRow>
+                    )}
+                    {orders.map((o) => (
+                      <TableRow key={o.id}>
+                        <TableCell>{o.customer_name}</TableCell>
+                        <TableCell>{o.address}</TableCell>
+                        <TableCell className="max-w-xs truncate" title={o.items}>
+                          {o.items}
+                        </TableCell>
+                        <TableCell>৳{o.total_price}</TableCell>
+                        <TableCell>
+                          <select
+                            className="border border-border rounded-md bg-background px-2 py-1 text-xs"
+                            value={o.status}
+                            onChange={(e) => handleOrderStatusChange(o.id, e.target.value)}
+                          >
+                            <option value="Pending">Pending</option>
+                            <option value="Shipped">Shipped</option>
+                            <option value="Delivered">Delivered</option>
+                          </select>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                  <TableCaption>মোট {orders.length} টি অর্ডার</TableCaption>
+                </Table>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+          )}
+
+          {activeSection === "customers" && (
+            <Card className="shadow-soft">
+              <CardHeader>
+                <CardTitle>কাস্টমারস</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  কাস্টমার লিস্ট ফিচারটি এখনো সেটআপ করা হয়নি। পরে এখানে অর্ডার করা কাস্টমারদের ডাটা দেখানো যাবে।
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </section>
       </main>
     </div>
   );
