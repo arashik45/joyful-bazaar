@@ -9,6 +9,7 @@ export interface Product {
   description?: string;
   stock_count?: number;
   seo_description?: string;
+  images?: string[];
 }
 
 export const homeProducts: Product[] = [
@@ -21,6 +22,12 @@ export const homeProducts: Product[] = [
     discount: 20,
     description: "উচ্চমানের সেফটি বেল্ট ও আরামদায়ক সিটসহ প্রিমিয়াম বেবি স্ট্রোলার।",
     rating: 4.7,
+    images: [
+      "https://images.unsplash.com/photo-1588773163629-e90a6c4f0cc6?w=500",
+      "https://images.unsplash.com/photo-1588773158776-75a3461bb477?w=500",
+      "https://images.unsplash.com/photo-1555255707-c07966088b7b?w=500",
+      "https://images.unsplash.com/photo-1527628173875-3c7bfd28ad6a?w=500",
+    ],
   },
   {
     id: "2",

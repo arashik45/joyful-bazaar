@@ -14,6 +14,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const checkoutSchema = z.object({
   name: z
@@ -41,11 +43,12 @@ const Checkout = () => {
   const [successOpen, setSuccessOpen] = useState(false);
   const [errors, setErrors] = useState<{ name?: string; phone?: string; address?: string }>({});
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const deliveryCharge = useMemo(() => (insideDhaka ? 80 : 130), [insideDhaka]);
   const grandTotal = useMemo(() => totalPrice + deliveryCharge, [totalPrice, deliveryCharge]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const result = checkoutSchema.safeParse({ name, phone, address });
     if (!result.success) {
       const fieldErrors: { name?: string; phone?: string; address?: string } = {};
@@ -57,12 +60,35 @@ const Checkout = () => {
       return;
     }
 
-    setErrors({});
-    setSuccessOpen(true);
-    setTimeout(() => {
-      setSuccessOpen(false);
-      navigate("/order-success");
-    }, 2000);
+    try {
+      const itemsSummary = items
+        .map((item) => `${item.name} x ${item.quantity} (৳${item.price})`)
+        .join(", ");
+
+      const { error } = await supabase.from("orders").insert({
+        customer_name: name,
+        address: `${address} (ফোন: ${phone})`,
+        items: itemsSummary,
+        total_price: grandTotal,
+        status: "Pending",
+      });
+
+      if (error) {
+        console.error("Order insert error", error);
+        toast({ title: "অর্ডার সংরক্ষণ ব্যর্থ", description: error.message, variant: "destructive" });
+        return;
+      }
+
+      setErrors({});
+      setSuccessOpen(true);
+      setTimeout(() => {
+        setSuccessOpen(false);
+        navigate("/order-success");
+      }, 2000);
+    } catch (err) {
+      console.error("Order submit error", err);
+      toast({ title: "অর্ডার পাঠাতে সমস্যা হয়েছে", variant: "destructive" });
+    }
   };
 
   return (
@@ -166,13 +192,7 @@ const Checkout = () => {
                 variant="shop"
                 className="w-full mt-4"
                 disabled={!name || !phone || !address || items.length === 0}
-                onClick={() => {
-                  setSuccessOpen(true);
-                  setTimeout(() => {
-                    setSuccessOpen(false);
-                    navigate("/order-success");
-                  }, 2000);
-                }}
+                onClick={handleSubmit}
               >
                 অর্ডার কনফার্ম করুন
               </Button>

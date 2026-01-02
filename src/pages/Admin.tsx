@@ -55,11 +55,13 @@ const Admin = () => {
     name: "",
     price: 0,
     category: CATEGORY_OPTIONS[0],
-    image: "",
+    image1: "",
+    image2: "",
+    image3: "",
+    image4: "",
     stock_count: 0,
     description: "",
     discount: 0,
-    seo_description: "",
   });
 
   useEffect(() => {
@@ -161,11 +163,13 @@ const Admin = () => {
       name: newProduct.name,
       price: newProduct.price,
       category: newProduct.category,
-      image_url: newProduct.image,
+      image_url: newProduct.image1,
+      image_url_2: newProduct.image2,
+      image_url_3: newProduct.image3,
+      image_url_4: newProduct.image4,
       stock_count: newProduct.stock_count,
       description: newProduct.description,
       discount: newProduct.discount,
-      seo_description: newProduct.seo_description,
     });
 
     if (error) {
@@ -178,11 +182,13 @@ const Admin = () => {
         name: "",
         price: 0,
         category: CATEGORY_OPTIONS[0],
-        image: "",
+        image1: "",
+        image2: "",
+        image3: "",
+        image4: "",
         stock_count: 0,
         description: "",
         discount: 0,
-        seo_description: "",
       });
       fetchProducts();
     }
@@ -339,7 +345,7 @@ const Admin = () => {
                   className="border border-border rounded-md bg-background px-3 py-2 text-sm"
                   value={newProduct.category}
                   onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-               >
+                >
                   {CATEGORY_OPTIONS.map((cat) => (
                     <option key={cat} value={cat}>
                       {cat}
@@ -348,11 +354,35 @@ const Admin = () => {
                 </select>
               </div>
               <div className="flex flex-col gap-1">
-                <span className="text-sm font-medium">Image URL:</span>
+                <span className="text-sm font-medium">Main Image URL (1):</span>
                 <Input
-                  value={newProduct.image}
-                  onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
-                  placeholder="ইমেজ URL"
+                  value={newProduct.image1}
+                  onChange={(e) => setNewProduct({ ...newProduct, image1: e.target.value })}
+                  placeholder="প্রধান ইমেজের URL"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Image URL (2):</span>
+                <Input
+                  value={newProduct.image2}
+                  onChange={(e) => setNewProduct({ ...newProduct, image2: e.target.value })}
+                  placeholder="২ নম্বর ইমেজের URL (ঐচ্ছিক)"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Image URL (3):</span>
+                <Input
+                  value={newProduct.image3}
+                  onChange={(e) => setNewProduct({ ...newProduct, image3: e.target.value })}
+                  placeholder="৩ নম্বর ইমেজের URL (ঐচ্ছিক)"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Image URL (4):</span>
+                <Input
+                  value={newProduct.image4}
+                  onChange={(e) => setNewProduct({ ...newProduct, image4: e.target.value })}
+                  placeholder="৪ নম্বর ইমেজের URL (ঐচ্ছিক)"
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -371,7 +401,9 @@ const Admin = () => {
                 <Input
                   type="number"
                   value={newProduct.discount}
-                  onChange={(e) => setNewProduct({ ...newProduct, discount: Number(e.target.value) || 0 })}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, discount: Number(e.target.value) || 0 })
+                  }
                   placeholder="ডিসকাউন্ট (০-১০০%)"
                 />
               </div>
@@ -381,14 +413,6 @@ const Admin = () => {
                   value={newProduct.description}
                   onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
                   placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা"
-                />
-              </div>
-              <div className="flex flex-col gap-1 md:col-span-2">
-                <span className="text-sm font-medium">SEO Description (Google / Search এর জন্য):</span>
-                <Input
-                  value={newProduct.seo_description}
-                  onChange={(e) => setNewProduct({ ...newProduct, seo_description: e.target.value })}
-                  placeholder="SEO ফ্রেন্ডলি বর্ণনা লিখুন"
                 />
               </div>
               <div className="md:col-span-2 flex justify-end gap-2">

@@ -55,6 +55,9 @@ export type Database = {
           discount: number | null
           id: string
           image_url: string | null
+          image_url_2: string | null
+          image_url_3: string | null
+          image_url_4: string | null
           name: string
           price: number
           seo_description: string | null
@@ -68,6 +71,9 @@ export type Database = {
           discount?: number | null
           id?: string
           image_url?: string | null
+          image_url_2?: string | null
+          image_url_3?: string | null
+          image_url_4?: string | null
           name: string
           price: number
           seo_description?: string | null
@@ -81,6 +87,9 @@ export type Database = {
           discount?: number | null
           id?: string
           image_url?: string | null
+          image_url_2?: string | null
+          image_url_3?: string | null
+          image_url_4?: string | null
           name?: string
           price?: number
           seo_description?: string | null

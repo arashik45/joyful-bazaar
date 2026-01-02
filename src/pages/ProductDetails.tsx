@@ -60,16 +60,22 @@ const ProductDetails = () => {
         setLoadError("প্রোডাক্ট লোড করতে সমস্যা হচ্ছে। পরে চেষ্টা করুন।");
         setProduct(null);
       } else if (data) {
+        const images = [data.image_url, data.image_url_2, data.image_url_3, data.image_url_4].filter(
+          (src): src is string => !!src
+        );
+
         const mapped: Product = {
           id: data.id,
           name: data.name,
           price: Number(data.price ?? 0),
-          image: data.image_url || "",
+          image: images[0] || data.image_url || "",
           category: data.category || "General",
           description: data.description || "",
-          stock_count: typeof data.stock_count === "number" ? data.stock_count : Number(data.stock_count ?? 0) || 0,
+          stock_count:
+            typeof data.stock_count === "number" ? data.stock_count : Number(data.stock_count ?? 0) || 0,
           discount: Number(data.discount ?? 0),
         };
+        (mapped as any).images = images;
         setProduct(mapped);
         setLoadError(null);
       } else {
@@ -190,7 +196,9 @@ const ProductDetails = () => {
     setForm({ name: "", rating: 5, comment: "" });
   };
 
-  const imageGallery = [product.image, product.image, product.image];
+  const imageGallery = (product as any).images && (product as any).images.length > 0
+    ? (product as any).images
+    : [product.image, product.image, product.image, product.image].filter(Boolean);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -202,7 +210,7 @@ const ProductDetails = () => {
           <div className="bg-muted rounded-3xl p-3 sm:p-4 flex items-center justify-center">
             <Carousel className="w-full max-w-md" opts={{ loop: true }}>
               <CarouselContent>
-                {imageGallery.map((src, index) => (
+                {imageGallery.map((src: string, index: number) => (
                   <CarouselItem key={index}>
                     <div className="overflow-hidden rounded-2xl group cursor-zoom-in">
                       <img
@@ -220,7 +228,7 @@ const ProductDetails = () => {
           </div>
 
           <div className="flex gap-3 justify-center">
-            {imageGallery.map((src, index) => (
+            {imageGallery.map((src: string, index: number) => (
               <button
                 key={index}
                 type="button"
@@ -284,9 +292,9 @@ const ProductDetails = () => {
             <span>{reviews.length} টি রিভিউ</span>
           </div>
 
-          <p className="text-sm text-muted-foreground">
-            {product.description || "এই প্রোডাক্ট সম্পর্কে বিস্তারিত শীঘ্রই যোগ করা হবে।"}
-          </p>
+                  <p className="text-sm text-muted-foreground whitespace-pre-line">
+                    {product.description || "এই প্রোডাক্ট সম্পর্কে বিস্তারিত শীঘ্রই যোগ করা হবে।"}
+                  </p>
 
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <span className="font-medium">
