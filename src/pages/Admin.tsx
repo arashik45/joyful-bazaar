@@ -63,6 +63,7 @@ const Admin = () => {
     stock_count: 0,
     description: "",
     discount: 0,
+    metaText: "",
   });
 
   useEffect(() => {
@@ -133,7 +134,7 @@ const Admin = () => {
 
   const handleSaveProduct = async () => {
     if (!editingProduct) return;
-    const { id, name, price, description, category, image, stock_count, discount } =
+    const { id, name, price, description, category, image, stock_count, discount, seo_description } =
       editingProduct as any;
 
     const { error } = await supabase
@@ -146,6 +147,7 @@ const Admin = () => {
         image_url: image,
         stock_count: stock_count ?? 0,
         discount: discount ?? 0,
+        seo_description: seo_description || "",
       })
       .eq("id", id);
 
@@ -171,6 +173,7 @@ const Admin = () => {
       stock_count: newProduct.stock_count,
       description: newProduct.description,
       discount: newProduct.discount,
+      seo_description: newProduct.metaText,
     });
 
     if (error) {
@@ -190,6 +193,7 @@ const Admin = () => {
         stock_count: 0,
         description: "",
         discount: 0,
+        metaText: "",
       });
       fetchProducts();
     }
@@ -417,6 +421,14 @@ const Admin = () => {
                   placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা (এখানে যা লিখবেন, নিচের পণ্যের বিস্তারিত ট্যাবে তাই দেখাবে)"
                 />
               </div>
+              <div className="flex flex-col gap-1 md:col-span-2">
+                <span className="text-sm font-medium">Product Meta Text (নামের নিচে ছোট লাইন):</span>
+                <Input
+                  value={newProduct.metaText}
+                  onChange={(e) => setNewProduct({ ...newProduct, metaText: e.target.value })}
+                  placeholder="যেমন: Lightweight running shoes with breathable mesh upper"
+                />
+              </div>
               <div className="md:col-span-2 flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setIsAddingProduct(false)}>
                   ক্যানসেল
@@ -493,12 +505,11 @@ const Admin = () => {
                 />
               </div>
               <div className="flex flex-col gap-1 md:col-span-2">
-                <span className="text-sm font-medium">Product Description (ওয়েবসাইটে দেখা যাবে):</span>
-                <Textarea
-                  className="min-h-[160px] resize-y"
-                  value={editingProduct.description || ""}
-                  onChange={(e) => handleProductChange("description", e.target.value)}
-                  placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা (এখানে যা লিখবেন, নিচের পণ্যের বিস্তারিত ট্যাবে তাই দেখাবে)"
+                <span className="text-sm font-medium">Product Meta Text (নামের নিচে ছোট লাইন):</span>
+                <Input
+                  value={(editingProduct as any).seo_description || ""}
+                  onChange={(e) => handleProductChange("seo_description", e.target.value)}
+                  placeholder="যেমন: Lightweight running shoes with breathable mesh upper"
                 />
               </div>
               <div className="md:col-span-2 flex justify-end gap-2">
