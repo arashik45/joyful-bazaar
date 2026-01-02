@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import ponnoHubLogo from "@/assets/ponno-hub-logo.png";
 
 export const Footer = () => {
   return (
@@ -9,10 +10,13 @@ export const Footer = () => {
           {/* Brand */}
           <div>
             <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 gradient-warm rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">শ</span>
-              </div>
-              <span className="text-xl font-heading font-bold">আমার শপ</span>
+              <img
+                src={ponnoHubLogo}
+                alt="পন্য Hub লোগো"
+                className="w-8 h-8 rounded-lg shadow-soft bg-background/80"
+                loading="lazy"
+              />
+              <span className="text-xl font-heading font-bold">পন্য Hub</span>
             </Link>
             <p className="text-sm text-muted-foreground mb-4">
               সারা বাংলাদেশের নির্ভরযোগ্য অনলাইন শপিং প্ল্যাটফর্ম। আসল পণ্য, সেরা দাম ও দ্রুত ডেলিভারি।
@@ -73,7 +77,7 @@ export const Footer = () => {
         </div>
 
         <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; ২০২৪ আমার শপ। সর্বস্বত্ব সংরক্ষিত।</p>
+          <p>&copy; ২০২৪ পন্য Hub। সর্বস্বত্ব সংরক্ষিত।</p>
         </div>
       </div>
     </footer>

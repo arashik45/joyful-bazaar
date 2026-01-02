@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCart } from "@/context/CartContext";
+import ponnoHubLogo from "@/assets/ponno-hub-logo.png";
 
 type HeaderProps = {
   searchValue?: string;
@@ -46,12 +47,15 @@ export const Header = ({ searchValue = "", onSearchChange }: HeaderProps) => {
       <div className="container mx-auto px-4 py-3 flex items-center gap-3 sm:gap-6">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="w-9 h-9 rounded-lg gradient-warm flex items-center justify-center shadow-soft">
-            <span className="text-white font-bold text-lg">শ</span>
-          </div>
+          <img
+            src={ponnoHubLogo}
+            alt="পন্য Hub লোগো"
+            className="h-9 w-auto rounded-lg shadow-soft bg-background/80"
+            loading="lazy"
+          />
           <div className="leading-tight hidden xs:block">
             <span className="block text-lg sm:text-xl font-heading font-extrabold tracking-tight">
-              আমার শপ
+              পন্য Hub
             </span>
             <span className="block text-[11px] text-muted-foreground">
               Bangladeshi Online Shop
