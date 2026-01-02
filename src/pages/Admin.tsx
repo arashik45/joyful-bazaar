@@ -37,10 +37,24 @@ const Admin = () => {
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isAddingProduct, setIsAddingProduct] = useState(false);
+  const CATEGORY_OPTIONS = [
+    "Men’s Fashion",
+    "Women’s Fashion",
+    "Kids & Baby",
+    "Islamic Products",
+    "Electronics & Gadgets",
+    "Home & Lifestyle",
+    "Kitchen Accessories",
+    "Baby Items",
+    "Women",
+    "Men",
+    "Electronics",
+  ];
+ 
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: 0,
-    category: "",
+    category: CATEGORY_OPTIONS[0],
     image: "",
     stock_count: 0,
     description: "",
@@ -301,61 +315,91 @@ const Admin = () => {
                 <CardHeader>
                   <CardTitle>নতুন পণ্য যোগ করুন</CardTitle>
                 </CardHeader>
-                <CardContent className="grid gap-3 md:grid-cols-2">
-                  <Input
-                    value={newProduct.name}
-                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                    placeholder="পণ্যের নাম"
-                  />
-                  <Input
-                    type="number"
-                    value={newProduct.price}
-                    onChange={(e) => setNewProduct({ ...newProduct, price: Number(e.target.value) || 0 })}
-                    placeholder="দাম"
-                  />
-                  <Input
-                    value={newProduct.category}
-                    onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                    placeholder="ক্যাটাগরি"
-                  />
-                  <Input
-                    value={newProduct.image}
-                    onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
-                    placeholder="ইমেজ URL"
-                  />
-                  <Input
-                    type="number"
-                    value={newProduct.stock_count}
-                    onChange={(e) => setNewProduct({ ...newProduct, stock_count: Number(e.target.value) || 0 })}
-                    placeholder="স্টক পরিমাণ"
-                  />
-                  <Input
-                    type="number"
-                    value={newProduct.discount}
-                    onChange={(e) => setNewProduct({ ...newProduct, discount: Number(e.target.value) || 0 })}
-                    placeholder="ডিসকাউন্ট (০-১০০%)"
-                  />
-                  <Input
-                    value={newProduct.description}
-                    onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                    placeholder="সংক্ষিপ্ত বিবরণ"
-                    className="md:col-span-2"
-                  />
-                  <Input
-                    value={newProduct.seo_description}
-                    onChange={(e) => setNewProduct({ ...newProduct, seo_description: e.target.value })}
-                    placeholder="SEO বিবরণ (সার্চ ইঞ্জিনের জন্য)"
-                    className="md:col-span-2"
-                  />
-                  <div className="md:col-span-2 flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => setIsAddingProduct(false)}>
-                      ক্যানসেল
-                    </Button>
-                    <Button variant="hero" onClick={handleAddProduct}>
-                      পণ্য যোগ করুন
-                    </Button>
-                  </div>
-                </CardContent>
+            <CardContent className="grid gap-4 md:grid-cols-2">
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Product Name:</span>
+                <Input
+                  value={newProduct.name}
+                  onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                  placeholder="পণ্যের নাম"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Price:</span>
+                <Input
+                  type="number"
+                  value={newProduct.price}
+                  onChange={(e) => setNewProduct({ ...newProduct, price: Number(e.target.value) || 0 })}
+                  placeholder="দাম"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Category:</span>
+                <select
+                  className="border border-border rounded-md bg-background px-3 py-2 text-sm"
+                  value={newProduct.category}
+                  onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+               >
+                  {CATEGORY_OPTIONS.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Image URL:</span>
+                <Input
+                  value={newProduct.image}
+                  onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
+                  placeholder="ইমেজ URL"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Stock Count:</span>
+                <Input
+                  type="number"
+                  value={newProduct.stock_count}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, stock_count: Number(e.target.value) || 0 })
+                  }
+                  placeholder="স্টক পরিমাণ"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Discount (%):</span>
+                <Input
+                  type="number"
+                  value={newProduct.discount}
+                  onChange={(e) => setNewProduct({ ...newProduct, discount: Number(e.target.value) || 0 })}
+                  placeholder="ডিসকাউন্ট (০-১০০%)"
+                />
+              </div>
+              <div className="flex flex-col gap-1 md:col-span-2">
+                <span className="text-sm font-medium">Product Description (ওয়েবসাইটে দেখা যাবে):</span>
+                <Input
+                  value={newProduct.description}
+                  onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                  placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা"
+                />
+              </div>
+              <div className="flex flex-col gap-1 md:col-span-2">
+                <span className="text-sm font-medium">SEO Description (Google / Search এর জন্য):</span>
+                <Input
+                  value={newProduct.seo_description}
+                  onChange={(e) => setNewProduct({ ...newProduct, seo_description: e.target.value })}
+                  placeholder="SEO ফ্রেন্ডলি বর্ণনা লিখুন"
+                />
+              </div>
+              <div className="md:col-span-2 flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setIsAddingProduct(false)}>
+                  ক্যানসেল
+                </Button>
+                <Button variant="hero" onClick={handleAddProduct}>
+                  পণ্য যোগ করুন
+                </Button>
+              </div>
+            </CardContent>
               </Card>
             )}
 
@@ -364,61 +408,89 @@ const Admin = () => {
                 <CardHeader>
                   <CardTitle>পণ্য আপডেট করুন</CardTitle>
                 </CardHeader>
-                <CardContent className="grid gap-3 md:grid-cols-2">
-                  <Input
-                    value={editingProduct.name}
-                    onChange={(e) => handleProductChange("name", e.target.value)}
-                    placeholder="নাম"
-                  />
-                  <Input
-                    type="number"
-                    value={editingProduct.price}
-                    onChange={(e) => handleProductChange("price", Number(e.target.value) || 0)}
-                    placeholder="দাম"
-                  />
-                  <Input
-                    value={editingProduct.category}
-                    onChange={(e) => handleProductChange("category", e.target.value)}
-                    placeholder="ক্যাটাগরি"
-                  />
-                  <Input
-                    value={editingProduct.image}
-                    onChange={(e) => handleProductChange("image", e.target.value)}
-                    placeholder="ইমেজ URL"
-                  />
-                  <Input
-                    type="number"
-                    value={editingProduct.stock_count ?? 0}
-                    onChange={(e) => handleProductChange("stock_count", Number(e.target.value) || 0)}
-                    placeholder="স্টক পরিমাণ"
-                  />
-                  <Input
-                    type="number"
-                    value={(editingProduct as any).discount ?? 0}
-                    onChange={(e) => handleProductChange("discount", Number(e.target.value) || 0)}
-                    placeholder="ডিসকাউন্ট (০-১০০%)"
-                  />
-                  <Input
-                    value={editingProduct.description || ""}
-                    onChange={(e) => handleProductChange("description", e.target.value)}
-                    placeholder="সংক্ষিপ্ত বিবরণ"
-                    className="md:col-span-2"
-                  />
-                  <Input
-                    value={(editingProduct as any).seo_description || ""}
-                    onChange={(e) => handleProductChange("seo_description", e.target.value)}
-                    placeholder="SEO বিবরণ (সার্চ ইঞ্জিনের জন্য)"
-                    className="md:col-span-2"
-                  />
-                  <div className="md:col-span-2 flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => setEditingProduct(null)}>
-                      ক্যানসেল
-                    </Button>
-                    <Button variant="hero" onClick={handleSaveProduct}>
-                      সেভ করুন
-                    </Button>
-                  </div>
-                </CardContent>
+            <CardContent className="grid gap-4 md:grid-cols-2">
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Product Name:</span>
+                <Input
+                  value={editingProduct.name}
+                  onChange={(e) => handleProductChange("name", e.target.value)}
+                  placeholder="পণ্যের নাম"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Price:</span>
+                <Input
+                  type="number"
+                  value={editingProduct.price}
+                  onChange={(e) => handleProductChange("price", Number(e.target.value) || 0)}
+                  placeholder="দাম"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Category:</span>
+                <select
+                  className="border border-border rounded-md bg-background px-3 py-2 text-sm"
+                  value={editingProduct.category}
+                  onChange={(e) => handleProductChange("category", e.target.value)}
+                >
+                  {CATEGORY_OPTIONS.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Image URL:</span>
+                <Input
+                  value={editingProduct.image}
+                  onChange={(e) => handleProductChange("image", e.target.value)}
+                  placeholder="ইমেজ URL"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Stock Count:</span>
+                <Input
+                  type="number"
+                  value={editingProduct.stock_count ?? 0}
+                  onChange={(e) => handleProductChange("stock_count", Number(e.target.value) || 0)}
+                  placeholder="স্টক পরিমাণ"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Discount (%):</span>
+                <Input
+                  type="number"
+                  value={(editingProduct as any).discount ?? 0}
+                  onChange={(e) => handleProductChange("discount", Number(e.target.value) || 0)}
+                  placeholder="ডিসকাউন্ট (০-১০০%)"
+                />
+              </div>
+              <div className="flex flex-col gap-1 md:col-span-2">
+                <span className="text-sm font-medium">Product Description (ওয়েবসাইটে দেখা যাবে):</span>
+                <Input
+                  value={editingProduct.description || ""}
+                  onChange={(e) => handleProductChange("description", e.target.value)}
+                  placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা"
+                />
+              </div>
+              <div className="flex flex-col gap-1 md:col-span-2">
+                <span className="text-sm font-medium">SEO Description (Google / Search এর জন্য):</span>
+                <Input
+                  value={(editingProduct as any).seo_description || ""}
+                  onChange={(e) => handleProductChange("seo_description", e.target.value)}
+                  placeholder="SEO ফ্রেন্ডলি বর্ণনা লিখুন"
+                />
+              </div>
+              <div className="md:col-span-2 flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setEditingProduct(null)}>
+                  ক্যানসেল
+                </Button>
+                <Button variant="hero" onClick={handleSaveProduct}>
+                  সেভ করুন
+                </Button>
+              </div>
+            </CardContent>
               </Card>
             )}
           </TabsContent>
