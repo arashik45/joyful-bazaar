@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
@@ -409,10 +410,11 @@ const Admin = () => {
               </div>
               <div className="flex flex-col gap-1 md:col-span-2">
                 <span className="text-sm font-medium">Product Description (ওয়েবসাইটে দেখা যাবে):</span>
-                <Input
+                <Textarea
+                  className="min-h-[160px] resize-y"
                   value={newProduct.description}
                   onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                  placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা"
+                  placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা (এখানে যা লিখবেন, নিচের পণ্যের বিস্তারিত ট্যাবে তাই দেখাবে)"
                 />
               </div>
               <div className="md:col-span-2 flex justify-end gap-2">
@@ -492,10 +494,11 @@ const Admin = () => {
               </div>
               <div className="flex flex-col gap-1 md:col-span-2">
                 <span className="text-sm font-medium">Product Description (ওয়েবসাইটে দেখা যাবে):</span>
-                <Input
+                <Textarea
+                  className="min-h-[160px] resize-y"
                   value={editingProduct.description || ""}
                   onChange={(e) => handleProductChange("description", e.target.value)}
-                  placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা"
+                  placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা (এখানে যা লিখবেন, নিচের পণ্যের বিস্তারিত ট্যাবে তাই দেখাবে)"
                 />
               </div>
               <div className="md:col-span-2 flex justify-end gap-2">
