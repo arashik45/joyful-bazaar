@@ -177,7 +177,7 @@ const Admin = () => {
       setNewProduct({
         name: "",
         price: 0,
-        category: "",
+        category: CATEGORY_OPTIONS[0],
         image: "",
         stock_count: 0,
         description: "",
