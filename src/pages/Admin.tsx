@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LayoutDashboard, Package2, ShoppingBag, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { Product } from "@/data/products";
@@ -34,9 +35,11 @@ const Admin = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isAddingProduct, setIsAddingProduct] = useState(false);
-  const [activeSection, setActiveSection] = useState<"products" | "orders" | "customers">("products");
+  const [activeSection, setActiveSection] = useState<"dashboard" | "products" | "orders" | "settings">("dashboard");
+
   const CATEGORY_OPTIONS = [
     "Men’s Fashion",
     "Women’s Fashion",
@@ -50,7 +53,7 @@ const Admin = () => {
     "Men",
     "Electronics",
   ];
- 
+
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: 0,
@@ -64,12 +67,49 @@ const Admin = () => {
     longDescription: "",
     discount: 0,
     metaText: "",
+    status: "active" as "active" | "draft",
   });
 
   useEffect(() => {
     if (!unlocked) return;
+
     fetchProducts();
     fetchOrders();
+
+    const productsChannel = supabase
+      .channel("admin-products")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "products",
+        },
+        () => {
+          fetchProducts();
+        },
+      )
+      .subscribe();
+
+    const ordersChannel = supabase
+      .channel("admin-orders")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "orders",
+        },
+        () => {
+          fetchOrders();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(productsChannel);
+      supabase.removeChannel(ordersChannel);
+    };
   }, [unlocked]);
 
   const handleUnlock = (e: React.FormEvent) => {
@@ -100,6 +140,8 @@ const Admin = () => {
         stock_count: typeof p.stock_count === "number" ? p.stock_count : Number(p.stock_count ?? 0) || 0,
         discount: Number(p.discount ?? 0),
         seo_description: p.seo_description || "",
+        long_description: p.long_description || "",
+        status: p.status || "active",
       }));
       setProducts(mapped);
     }
@@ -121,10 +163,28 @@ const Admin = () => {
           items: o.items,
           total_price: Number(o.total_price ?? 0),
           status: o.status,
-        }))
+        })),
       );
     }
     setLoadingOrders(false);
+  };
+
+  const uploadImageToBucket = async (file: File): Promise<string | null> => {
+    try {
+      setUploadingImage(true);
+      const filePath = `product-${Date.now()}-${file.name}`;
+      const { error: uploadError } = await supabase.storage.from("product-images").upload(filePath, file);
+      if (uploadError) {
+        console.error(uploadError);
+        toast({ title: "ইমেজ আপলোড ব্যর্থ", description: uploadError.message, variant: "destructive" });
+        return null;
+      }
+
+      const { data } = supabase.storage.from("product-images").getPublicUrl(filePath);
+      return data.publicUrl;
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleProductChange = (field: keyof Product, value: string | number) => {
@@ -134,8 +194,19 @@ const Admin = () => {
 
   const handleSaveProduct = async () => {
     if (!editingProduct) return;
-    const { id, name, price, description, category, image, stock_count, discount, seo_description, long_description } =
-      editingProduct as any;
+    const {
+      id,
+      name,
+      price,
+      description,
+      category,
+      image,
+      stock_count,
+      discount,
+      seo_description,
+      long_description,
+      status,
+    } = editingProduct as any;
 
     const { error } = await supabase
       .from("products")
@@ -149,6 +220,7 @@ const Admin = () => {
         stock_count: stock_count ?? 0,
         discount: discount ?? 0,
         seo_description: seo_description || "",
+        status: status || "active",
       })
       .eq("id", id);
 
@@ -176,6 +248,7 @@ const Admin = () => {
       long_description: newProduct.longDescription,
       discount: newProduct.discount,
       seo_description: newProduct.metaText,
+      status: newProduct.status,
     });
 
     if (error) {
@@ -197,6 +270,7 @@ const Admin = () => {
         longDescription: "",
         discount: 0,
         metaText: "",
+        status: "active",
       });
       fetchProducts();
     }
@@ -253,31 +327,55 @@ const Admin = () => {
     <div className="min-h-screen bg-muted/40">
       <main className="max-w-6xl mx-auto px-4 py-8 flex gap-6">
         {/* Sidebar */}
-        <aside className="w-56 bg-card border border-border rounded-xl shadow-soft p-4 flex flex-col gap-2">
-          <h2 className="text-sm font-semibold text-muted-foreground mb-2">Admin Navigation</h2>
-          <Button
-            variant={activeSection === "products" ? "hero" : "outline"}
-            className="justify-start"
-            onClick={() => setActiveSection("products")}
-          >
-            Products
-          </Button>
-          <Button
-            variant={activeSection === "orders" ? "hero" : "outline"}
-            className="justify-start"
-            onClick={() => setActiveSection("orders")}
-          >
-            Orders
-          </Button>
-          <Button
-            variant={activeSection === "customers" ? "hero" : "outline"}
-            className="justify-start"
-            onClick={() => setActiveSection("customers")}
-          >
-            Customers
-          </Button>
-          <div className="mt-auto pt-4 border-t border-border/60">
-            <Button variant="outline" size="sm" className="w-full" onClick={() => navigate("/")}>
+        <aside className="w-64 bg-card border border-border rounded-2xl shadow-soft p-4 flex flex-col gap-2">
+          <div className="flex items-center gap-2 mb-4 px-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <LayoutDashboard className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-muted-foreground">Ponno Hub</p>
+              <p className="text-sm font-semibold">Admin Panel</p>
+            </div>
+          </div>
+
+          <nav className="space-y-1 text-sm">
+            <Button
+              variant={activeSection === "dashboard" ? "hero" : "outline"}
+              className="w-full justify-start gap-2"
+              onClick={() => setActiveSection("dashboard")}
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              Dashboard
+            </Button>
+            <Button
+              variant={activeSection === "products" ? "hero" : "outline"}
+              className="w-full justify-start gap-2"
+              onClick={() => setActiveSection("products")}
+            >
+              <Package2 className="h-4 w-4" />
+              Products
+            </Button>
+            <Button
+              variant={activeSection === "orders" ? "hero" : "outline"}
+              className="w-full justify-start gap-2"
+              onClick={() => setActiveSection("orders")}
+            >
+              <ShoppingBag className="h-4 w-4" />
+              Orders
+            </Button>
+            <Button
+              variant={activeSection === "settings" ? "hero" : "outline"}
+              className="w-full justify-start gap-2"
+              onClick={() => setActiveSection("settings")}
+            >
+              <SettingsIcon className="h-4 w-4" />
+              Settings
+            </Button>
+          </nav>
+
+          <div className="mt-auto pt-4 border-t border-border/60 space-y-2">
+            <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={() => navigate("/")}>
+              <LogOut className="h-4 w-4" />
               হোমে ফিরে যান
             </Button>
           </div>
@@ -285,11 +383,44 @@ const Admin = () => {
 
         {/* Main content */}
         <section className="flex-1 space-y-6">
-          <h1 className="text-2xl font-heading font-bold">
-            {activeSection === "products" && "পণ্য ম্যানেজমেন্ট"}
-            {activeSection === "orders" && "অর্ডার ম্যানেজমেন্ট"}
-            {activeSection === "customers" && "কাস্টমারস"}
-          </h1>
+          <header className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-heading font-bold">
+                {activeSection === "dashboard" && "Dashboard Overview"}
+                {activeSection === "products" && "পণ্য ম্যানেজমেন্ট"}
+                {activeSection === "orders" && "অর্ডার ম্যানেজমেন্ট"}
+                {activeSection === "settings" && "Settings"}
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                আপনার ই-কমার্স স্টোরের সব কিছু এক জায়গা থেকে কন্ট্রোল করুন।
+              </p>
+            </div>
+          </header>
+
+          {activeSection === "dashboard" && (
+            <div className="grid gap-4 md:grid-cols-3">
+              <Card className="shadow-soft">
+                <CardHeader>
+                  <CardTitle className="text-sm">মোট পণ্য</CardTitle>
+                </CardHeader>
+                <CardContent className="text-2xl font-bold">{products.length}</CardContent>
+              </Card>
+              <Card className="shadow-soft">
+                <CardHeader>
+                  <CardTitle className="text-sm">মোট অর্ডার</CardTitle>
+                </CardHeader>
+                <CardContent className="text-2xl font-bold">{orders.length}</CardContent>
+              </Card>
+              <Card className="shadow-soft">
+                <CardHeader>
+                  <CardTitle className="text-sm">স্টক থাকা পণ্য</CardTitle>
+                </CardHeader>
+                <CardContent className="text-2xl font-bold">
+                  {products.filter((p) => (p.stock_count ?? 0) > 0).length}
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
           {activeSection === "products" && (
             <>
@@ -304,11 +435,11 @@ const Admin = () => {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>নাম</TableHead>
-                        <TableHead>দাম</TableHead>
-                        <TableHead>ডিসকাউন্ট</TableHead>
-                        <TableHead>স্টক</TableHead>
+                        <TableHead>পণ্য</TableHead>
                         <TableHead>ক্যাটাগরি</TableHead>
+                        <TableHead>দাম</TableHead>
+                        <TableHead>স্টক</TableHead>
+                        <TableHead>স্ট্যাটাস</TableHead>
                         <TableHead>অ্যাকশন</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -325,11 +456,34 @@ const Admin = () => {
                       )}
                       {products.map((p) => (
                         <TableRow key={p.id}>
-                          <TableCell>{p.name}</TableCell>
-                          <TableCell>৳{p.price}</TableCell>
-                          <TableCell>{p.discount ?? 0}%</TableCell>
-                          <TableCell>{p.stock_count ?? 0}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-3">
+                              {p.image && (
+                                <img
+                                  src={p.image}
+                                  alt={p.name}
+                                  className="h-10 w-10 rounded-md object-cover border border-border"
+                                  loading="lazy"
+                                />
+                              )}
+                              <div>
+                                <p className="font-medium text-sm">{p.name}</p>
+                                {p.discount ? (
+                                  <p className="text-xs text-muted-foreground">ডিসকাউন্ট: {p.discount}%</p>
+                                ) : null}
+                              </div>
+                            </div>
+                          </TableCell>
                           <TableCell>{p.category}</TableCell>
+                          <TableCell>৳{p.price}</TableCell>
+                          <TableCell>{p.stock_count ?? 0}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={p.status === "active" ? "secondary" : p.status === "draft" ? "outline" : "default"}
+                            >
+                              {p.status === "draft" ? "Draft" : "Active"}
+                            </Badge>
+                          </TableCell>
                           <TableCell className="space-x-2">
                             <Button size="sm" variant="outline" onClick={() => setEditingProduct(p)}>
                               এডিট
@@ -384,12 +538,27 @@ const Admin = () => {
                       </select>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-sm font-medium">Main Image URL (1):</span>
+                      <span className="text-sm font-medium">Main Image:</span>
                       <Input
-                        value={newProduct.image1}
-                        onChange={(e) => setNewProduct({ ...newProduct, image1: e.target.value })}
-                        placeholder="প্রধান ইমেজের URL"
+                        type="file"
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const url = await uploadImageToBucket(file);
+                          if (url) {
+                            setNewProduct((prev) => ({ ...prev, image1: url }));
+                          }
+                        }}
                       />
+                      {uploadingImage && <span className="text-xs text-muted-foreground">ইমেজ আপলোড হচ্ছে...</span>}
+                      {newProduct.image1 && (
+                        <img
+                          src={newProduct.image1}
+                          alt="Preview"
+                          className="mt-2 h-16 w-16 rounded-md object-cover border border-border"
+                        />
+                      )}
                     </div>
                     <div className="flex flex-col gap-1">
                       <span className="text-sm font-medium">Image URL (2):</span>
@@ -423,7 +592,23 @@ const Admin = () => {
                         onChange={(e) =>
                           setNewProduct({ ...newProduct, stock_count: Number(e.target.value) || 0 })
                         }
-                        placeholder="স্টক পরিমাণ"
+                        placeholder="স্টকে কতটি আছে"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Short Description:</span>
+                      <Textarea
+                        value={newProduct.description}
+                        onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                        placeholder="সংক্ষিপ্ত বর্ণনা"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Long Description:</span>
+                      <Textarea
+                        value={newProduct.longDescription}
+                        onChange={(e) => setNewProduct({ ...newProduct, longDescription: e.target.value })}
+                        placeholder="ডিটেইল বর্ণনা"
                       />
                     </div>
                     <div className="flex flex-col gap-1">
@@ -431,43 +616,37 @@ const Admin = () => {
                       <Input
                         type="number"
                         value={newProduct.discount}
+                        onChange={(e) => setNewProduct({ ...newProduct, discount: Number(e.target.value) || 0 })}
+                        placeholder="ডিসকাউন্ট থাকলে দিন"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Status:</span>
+                      <select
+                        className="border border-border rounded-md bg-background px-3 py-2 text-sm"
+                        value={newProduct.status}
                         onChange={(e) =>
-                          setNewProduct({ ...newProduct, discount: Number(e.target.value) || 0 })
+                          setNewProduct({ ...newProduct, status: e.target.value as "active" | "draft" })
                         }
-                        placeholder="ডিসকাউন্ট (০-১০০%)"
-                      />
+                      >
+                        <option value="active">Active</option>
+                        <option value="draft">Draft</option>
+                      </select>
                     </div>
                     <div className="flex flex-col gap-1 md:col-span-2">
-                      <span className="text-sm font-medium">Short Description (নামের নিচে ছোট লাইন):</span>
-                      <Input
-                        value={newProduct.description}
-                        onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                        placeholder="যেমন: Lightweight running shoes with breathable mesh upper"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1 md:col-span-2">
-                      <span className="text-sm font-medium">Long Description (পণ্যের বিস্তারিত ট্যাবে):</span>
+                      <span className="text-sm font-medium">Meta Description (SEO):</span>
                       <Textarea
-                        className="min-h-[160px] resize-y"
-                        value={newProduct.longDescription}
-                        onChange={(e) => setNewProduct({ ...newProduct, longDescription: e.target.value })}
-                        placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা (এখানে যা লিখবেন, নিচের পণ্যের বিস্তারিত ট্যাবে তাই দেখাবে)"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1 md:col-span-2">
-                      <span className="text-sm font-medium">Product Meta Text (SEO এর জন্য):</span>
-                      <Input
                         value={newProduct.metaText}
                         onChange={(e) => setNewProduct({ ...newProduct, metaText: e.target.value })}
-                        placeholder="Search engine এ দেখাবে (optional)"
+                        placeholder="SEO এর জন্য বর্ণনা"
                       />
                     </div>
-                    <div className="md:col-span-2 flex justify-end gap-2">
-                      <Button variant="outline" onClick={() => setIsAddingProduct(false)}>
-                        ক্যানসেল
+                    <div className="flex gap-2 md:col-span-2 justify-end">
+                      <Button variant="outline" type="button" onClick={() => setIsAddingProduct(false)}>
+                        বাতিল
                       </Button>
-                      <Button variant="hero" onClick={handleAddProduct}>
-                        পণ্য যোগ করুন
+                      <Button type="button" onClick={handleAddProduct}>
+                        সেভ করুন
                       </Button>
                     </div>
                   </CardContent>
@@ -477,7 +656,7 @@ const Admin = () => {
               {editingProduct && (
                 <Card className="shadow-soft">
                   <CardHeader>
-                    <CardTitle>পণ্য আপডেট করুন</CardTitle>
+                    <CardTitle>পণ্য এডিট করুন</CardTitle>
                   </CardHeader>
                   <CardContent className="grid gap-4 md:grid-cols-2">
                     <div className="flex flex-col gap-1">
@@ -485,7 +664,6 @@ const Admin = () => {
                       <Input
                         value={editingProduct.name}
                         onChange={(e) => handleProductChange("name", e.target.value)}
-                        placeholder="পণ্যের নাম"
                       />
                     </div>
                     <div className="flex flex-col gap-1">
@@ -494,7 +672,6 @@ const Admin = () => {
                         type="number"
                         value={editingProduct.price}
                         onChange={(e) => handleProductChange("price", Number(e.target.value) || 0)}
-                        placeholder="দাম"
                       />
                     </div>
                     <div className="flex flex-col gap-1">
@@ -512,63 +689,81 @@ const Admin = () => {
                       </select>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-sm font-medium">Image URL:</span>
+                      <span className="text-sm font-medium">Main Image:</span>
                       <Input
-                        value={editingProduct.image}
-                        onChange={(e) => handleProductChange("image", e.target.value)}
-                        placeholder="ইমেজ URL"
+                        type="file"
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const url = await uploadImageToBucket(file);
+                          if (url) {
+                            handleProductChange("image" as any, url);
+                          }
+                        }}
                       />
+                      {uploadingImage && <span className="text-xs text-muted-foreground">ইমেজ আপলোড হচ্ছে...</span>}
+                      {editingProduct.image && (
+                        <img
+                          src={editingProduct.image}
+                          alt={editingProduct.name}
+                          className="mt-2 h-16 w-16 rounded-md object-cover border border-border"
+                        />
+                      )}
                     </div>
                     <div className="flex flex-col gap-1">
                       <span className="text-sm font-medium">Stock Count:</span>
                       <Input
                         type="number"
                         value={editingProduct.stock_count ?? 0}
-                        onChange={(e) => handleProductChange("stock_count", Number(e.target.value) || 0)}
-                        placeholder="স্টক পরিমাণ"
+                        onChange={(e) => handleProductChange("stock_count" as any, Number(e.target.value) || 0)}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Short Description:</span>
+                      <Textarea
+                        value={editingProduct.description || ""}
+                        onChange={(e) => handleProductChange("description" as any, e.target.value)}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Long Description:</span>
+                      <Textarea
+                        value={editingProduct.long_description || ""}
+                        onChange={(e) => handleProductChange("long_description" as any, e.target.value)}
                       />
                     </div>
                     <div className="flex flex-col gap-1">
                       <span className="text-sm font-medium">Discount (%):</span>
                       <Input
                         type="number"
-                        value={(editingProduct as any).discount ?? 0}
-                        onChange={(e) => handleProductChange("discount", Number(e.target.value) || 0)}
-                        placeholder="ডিসকাউন্ট (০-১০০%)"
+                        value={editingProduct.discount ?? 0}
+                        onChange={(e) => handleProductChange("discount" as any, Number(e.target.value) || 0)}
                       />
                     </div>
-                    <div className="flex flex-col gap-1 md:col-span-2">
-                      <span className="text-sm font-medium">Short Description (নামের নিচে ছোট লাইন):</span>
-                      <Input
-                        value={editingProduct.description || ""}
-                        onChange={(e) => handleProductChange("description", e.target.value)}
-                        placeholder="যেমন: Lightweight running shoes with breathable mesh upper"
-                      />
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium">Status:</span>
+                      <select
+                        className="border border-border rounded-md bg-background px-3 py-2 text-sm"
+                        value={editingProduct.status || "active"}
+                        onChange={(e) => handleProductChange("status" as any, e.target.value)}
+                      >
+                        <option value="active">Active</option>
+                        <option value="draft">Draft</option>
+                      </select>
                     </div>
                     <div className="flex flex-col gap-1 md:col-span-2">
-                      <span className="text-sm font-medium">Long Description (পণ্যের বিস্তারিত ট্যাবে):</span>
+                      <span className="text-sm font-medium">Meta Description (SEO):</span>
                       <Textarea
-                        className="min-h-[160px] resize-y"
-                        value={(editingProduct as any).long_description || ""}
-                        onChange={(e) =>
-                          setEditingProduct({ ...editingProduct, long_description: e.target.value } as any)
-                        }
-                        placeholder="প্রোডাক্টের বিস্তারিত বর্ণনা"
+                        value={editingProduct.seo_description || ""}
+                        onChange={(e) => handleProductChange("seo_description" as any, e.target.value)}
                       />
                     </div>
-                    <div className="flex flex-col gap-1 md:col-span-2">
-                      <span className="text-sm font-medium">Product Meta Text (SEO এর জন্য):</span>
-                      <Input
-                        value={(editingProduct as any).seo_description || ""}
-                        onChange={(e) => handleProductChange("seo_description", e.target.value)}
-                        placeholder="Search engine এ দেখাবে (optional)"
-                      />
-                    </div>
-                    <div className="md:col-span-2 flex justify-end gap-2">
-                      <Button variant="outline" onClick={() => setEditingProduct(null)}>
-                        ক্যানসেল
+                    <div className="flex gap-2 md:col-span-2 justify-end">
+                      <Button variant="outline" type="button" onClick={() => setEditingProduct(null)}>
+                        বাতিল
                       </Button>
-                      <Button variant="hero" onClick={handleSaveProduct}>
+                      <Button type="button" onClick={handleSaveProduct}>
                         সেভ করুন
                       </Button>
                     </div>
@@ -587,11 +782,11 @@ const Admin = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>কাস্টমার</TableHead>
-                      <TableHead>ঠিকানা</TableHead>
-                      <TableHead>অর্ডার আইটেম</TableHead>
-                      <TableHead>টোটাল</TableHead>
-                      <TableHead>স্ট্যাটাস</TableHead>
+                      <TableHead>Order ID</TableHead>
+                      <TableHead>Customer</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Total</TableHead>
+                      <TableHead>Update</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -607,40 +802,51 @@ const Admin = () => {
                     )}
                     {orders.map((o) => (
                       <TableRow key={o.id}>
+                        <TableCell>{o.id}</TableCell>
                         <TableCell>{o.customer_name}</TableCell>
-                        <TableCell>{o.address}</TableCell>
-                        <TableCell className="max-w-xs truncate" title={o.items}>
-                          {o.items}
+                        <TableCell>
+                          <Badge
+                            variant={
+                              o.status === "Paid"
+                                ? "secondary"
+                                : o.status === "Pending"
+                                  ? "outline"
+                                  : o.status === "Shipped"
+                                    ? "default"
+                                    : "outline"
+                            }
+                          >
+                            {o.status}
+                          </Badge>
                         </TableCell>
                         <TableCell>৳{o.total_price}</TableCell>
-                        <TableCell>
-                          <select
-                            className="border border-border rounded-md bg-background px-2 py-1 text-xs"
-                            value={o.status}
-                            onChange={(e) => handleOrderStatusChange(o.id, e.target.value)}
-                          >
-                            <option value="Pending">Pending</option>
-                            <option value="Shipped">Shipped</option>
-                            <option value="Delivered">Delivered</option>
-                          </select>
+                        <TableCell className="space-x-2">
+                          <Button size="sm" variant="outline" onClick={() => handleOrderStatusChange(o.id, "Pending")}>
+                            Pending
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => handleOrderStatusChange(o.id, "Paid")}>
+                            Paid
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => handleOrderStatusChange(o.id, "Shipped")}>
+                            Shipped
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
-                  <TableCaption>মোট {orders.length} টি অর্ডার</TableCaption>
                 </Table>
               </CardContent>
             </Card>
           )}
 
-          {activeSection === "customers" && (
+          {activeSection === "settings" && (
             <Card className="shadow-soft">
               <CardHeader>
-                <CardTitle>কাস্টমারস</CardTitle>
+                <CardTitle>Settings</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  কাস্টমার লিস্ট ফিচারটি এখনো সেটআপ করা হয়নি। পরে এখানে অর্ডার করা কাস্টমারদের ডাটা দেখানো যাবে।
+                  এখানে ভবিষ্যতে অ্যাডমিন রোল, থিম ও অন্যান্য অ্যাডভান্স সেটিংস কনফিগার করতে পারবেন।
                 </p>
               </CardContent>
             </Card>
