@@ -62,6 +62,7 @@ export type Database = {
           name: string
           price: number
           seo_description: string | null
+          status: string
           stock_count: number
           updated_at: string
         }
@@ -79,6 +80,7 @@ export type Database = {
           name: string
           price: number
           seo_description?: string | null
+          status?: string
           stock_count?: number
           updated_at?: string
         }
@@ -96,6 +98,7 @@ export type Database = {
           name?: string
           price?: number
           seo_description?: string | null
+          status?: string
           stock_count?: number
           updated_at?: string
         }

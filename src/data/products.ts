@@ -11,6 +11,7 @@ export interface Product {
   seo_description?: string;
   long_description?: string;
   images?: string[];
+  status?: string;
 }
 
 export const homeProducts: Product[] = [
